@@ -95,7 +95,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - CSV upload is missing one or more required fields (`Issue Type`, `Issue Key`, `Summary`): session creation is blocked and a clear validation message identifies missing fields.
 - CSV includes unsupported `Issue Type` values: those rows are rejected with row-level feedback while valid rows remain importable.
 - A participant leaves during active voting: vote counts and participant totals update immediately and no stale vote is counted.
-- The current leader leaves the session before designating a new leader: session must immediately have a visible leader designation flow so moderation can continue.
+- The current leader leaves the session before designating a new leader: the system automatically assigns a replacement leader from connected participants, announces the new leader to all participants, and preserves active issue/voting continuity.
 - A session is marked complete while participants are on the page: all users immediately see voting controls disabled and no further votes are recorded.
 - A participant tries to open an issue link when no base URL is configured: the issue key is displayed but link activation is disabled with explanatory text.
 
@@ -109,7 +109,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 ### Functional Requirements
 
 - **FR-001**: The feature MUST provide four user-facing surfaces: admin configuration page, entry/history page, new-session creation interface, and session detail page.
-- **FR-002**: The user interface MUST be responsive across desktop and mobile viewport sizes.
+- **FR-002**: The user interface MUST be responsive across desktop and mobile viewport sizes; automated verification is required for representative desktop viewport behavior, while mobile viewport verification may be manual and user-test driven.
 - **FR-003**: Users MUST be able to select either light mode or dark mode, and the selected mode MUST persist for future visits.
 - **FR-004**: Admins MUST be able to create, edit, and remove team names used in session setup.
 - **FR-005**: Admins MUST be able to set and update a base issue URL used to build issue links from imported issue keys.
@@ -126,6 +126,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - **FR-016**: Session status row MUST display session title, participant icons, a leave-session action for all participants, and a visually distinct leader indicator.
 - **FR-017**: Only the current leader MUST be able to complete the session or designate a different participant as leader.
 - **FR-018**: Leader designation MUST immediately update leader identity in participant indicators for all users.
+- **FR-018a**: If the current leader leaves an active session without designating a successor, the system MUST automatically assign a new leader from connected participants within 2 seconds and broadcast the leader change to all participants.
 - **FR-019**: Completing a session MUST stop further voting and prevent additional vote recording.
 - **FR-020**: The session detail view MUST present a navigation column and detail column with a 25%/75% width split target.
 - **FR-021**: Navigation cards MUST show issue type emoji (`📖` for Story, `🐞` for Bug), issue key link, summary, and current estimate if available.
@@ -139,7 +140,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - **FR-029**: After reveal, the actions area MUST show only unique selected cards as selectable options for leader finalization; non-leaders can view but cannot activate those options.
 - **FR-030**: The displayed average after reveal MUST include only numeric card values and treat `?`, `☕️`, and `♾️` as numeric `0`.
 - **FR-031**: The leader MUST be able to enter a custom estimate and save it as the final issue estimate.
-- **FR-032**: User-facing interactions MUST use clear validation and status messaging for CSV parsing errors, invalid actions, and session state changes.
+- **FR-032**: User-facing interactions MUST provide actionable validation and status messaging: field-level errors for invalid CSV/form inputs, role/permission errors for invalid actions, and session-state notifications for reveal/complete/leader changes.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -149,6 +150,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - **Issue**: Imported work item to estimate; includes issue type, issue key, summary, optional description, optional prior estimate, and final estimate.
 - **Vote**: Per-participant selection for the currently active issue; includes selected card value, timestamp, and visibility state (hidden/revealed).
 - **Voting Card Set**: Allowed symbols/values available for voting in a session.
+- **AdminConfig**: Workspace-level settings including issue base URL and governance options used by admin workflows.
 
 ### Assumptions
 
@@ -156,6 +158,7 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - Session list updates for users currently viewing entry/history are expected to occur quickly enough to appear near-real-time for normal team collaboration.
 - If no previous session exists for a selected team, the session name field remains editable and starts empty.
 - All session participants can see revealed votes and final estimate outcomes once the leader performs reveal/save actions.
+- Responsive behavior for mobile viewports is validated through moderated user testing and manual QA passes; automated device-level responsive testing is out of scope for this iteration.
 
 ### Dependencies
 
@@ -177,4 +180,4 @@ As an administrator, I can manage team names, completed sessions, and the issue 
 - **SC-003**: During live sessions with at least 8 participants, vote count (`N/M`) and anonymized vote placeholders reflect participant actions within 2 seconds in at least 95% of interactions.
 - **SC-004**: At least 95% of completed issue evaluations result in a stored final estimate (selected or custom) before moving to the next issue.
 - **SC-005**: At least 90% of users can locate and reopen a prior session using list sorting and filters without facilitator assistance.
-- **SC-006**: In accessibility and UX review, 100% of core flows (create session, vote, reveal, complete session) are fully usable in both light and dark modes.
+- **SC-006**: Automated tests verify core flows (create session, vote, reveal, complete session) on representative desktop viewports, while moderated usability review verifies the same flows on representative mobile viewports in both light and dark modes.

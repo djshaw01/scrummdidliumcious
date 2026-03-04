@@ -54,6 +54,8 @@
 - [ ] T019 [P] [US1] Add contract tests for session detail and vote lifecycle endpoints in tests/contract/test_us1_session_voting_contract.py
 - [ ] T020 [P] [US1] Add integration tests for live voting/reveal/finalize and rejoin behavior in tests/integration/test_us1_live_estimation_flow.py
 - [ ] T021 [P] [US1] Add SocketIO synchronization tests for vote_count_updated, issue_selected, votes_revealed, and leader_changed in tests/integration/test_us1_realtime_events.py
+- [ ] T061 [P] [US1] Add unit tests for average calculation with mixed cards (`?`, `☕️`, `♾️` treated as `0`) in tests/unit/test_vote_average_rules.py
+- [ ] T062 [P] [US1] Add integration test for automatic leader reassignment when leader leaves mid-session in tests/integration/test_us1_leader_reassignment.py
 
 ### Implementation for User Story 1
 
@@ -67,6 +69,7 @@
 - [ ] T029 [US1] Implement client-side session interactions for voting, reveal, rejoin, and final estimate save in app/static/js/session-detail.js
 - [ ] T030 [US1] Wire SocketIO room subscriptions and DOM synchronization for active issue and vote count updates in app/static/js/session-detail.js
 - [ ] T031 [US1] Enforce leader-only action guards and user-facing invalid-action messaging in app/domain/services/session_service.py
+- [ ] T063 [US1] Implement automatic leader reassignment and broadcast on leader leave in app/domain/services/session_service.py and app/web/sockets.py
 
 **Checkpoint**: User Story 1 is independently functional and testable (MVP).
 
@@ -152,6 +155,7 @@
 - [ ] T057 Finalize responsive and accessibility pass (keyboard flow, focus states, contrast checks) in app/static/css/styles.css
 - [ ] T058 [P] Update quickstart and developer notes for mock-data and optional postgres modes in specs/001-scrum-poker-system/quickstart.md
 - [ ] T059 Run full validation commands and record results in specs/001-scrum-poker-system/quickstart.md
+- [ ] T060 Add docstring compliance validation for modules/classes/functions and enforce in CI/local checks (Constitution VIII)
 
 ---
 
