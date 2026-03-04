@@ -1,0 +1,549 @@
+openapi: 3.1.0
+info:
+  title: Scrum Poker Session API
+  version: 0.1.0
+  description: |
+    Contract for SCRUM Poker session management and collaboration.
+    Initial implementation may be backed by in-memory mock repositories.
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+tags:
+  - name: Admin
+  - name: Sessions
+  - name: Issues
+  - name: Votes
+  - name: Realtime
+
+paths:
+  /api/admin/teams:
+    get:
+      tags: [Admin]
+      summary: List teams
+      responses:
+        '200':
+          description: Teams in workspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+    post:
+      tags: [Admin]
+      summary: Create team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamCreateRequest'
+      responses:
+        '201':
+          description: Team created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+
+  /api/admin/teams/{teamId}:
+    patch:
+      tags: [Admin]
+      summary: Update team
+      parameters:
+        - $ref: '#/components/parameters/TeamId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamUpdateRequest'
+      responses:
+        '200':
+          description: Team updated
+    delete:
+      tags: [Admin]
+      summary: Remove team
+      parameters:
+        - $ref: '#/components/parameters/TeamId'
+      responses:
+        '204':
+          description: Team removed
+
+  /api/admin/config:
+    get:
+      tags: [Admin]
+      summary: Get admin configuration
+      responses:
+        '200':
+          description: Current configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminConfig'
+    patch:
+      tags: [Admin]
+      summary: Update admin configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminConfigUpdateRequest'
+      responses:
+        '200':
+          description: Configuration updated
+
+  /api/admin/completed-sessions:
+    get:
+      tags: [Admin]
+      summary: List completed sessions
+      responses:
+        '200':
+          description: Completed sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionSummary'
+
+  /api/admin/completed-sessions/{sessionId}:
+    delete:
+      tags: [Admin]
+      summary: Delete a completed session
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '204':
+          description: Session deleted
+
+  /api/sessions:
+    get:
+      tags: [Sessions]
+      summary: List sessions in descending recency with optional filters
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: sprint
+          schema:
+            type: string
+        - in: query
+          name: teamId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionSummary'
+    post:
+      tags: [Sessions]
+      summary: Create a new session from form metadata and CSV issues
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [teamId, name, sprintNumber, cardSetName, issuesCsv]
+              properties:
+                teamId:
+                  type: string
+                name:
+                  type: string
+                sprintNumber:
+                  type: string
+                cardSetName:
+                  type: string
+                issuesCsv:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Session created and caller assigned leader
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreatedResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/sessions/{sessionId}:
+    get:
+      tags: [Sessions]
+      summary: Get session detail
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: Session detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionDetail'
+
+  /api/sessions/{sessionId}/participants/{participantId}/leave:
+    post:
+      tags: [Sessions]
+      summary: Leave session
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/ParticipantId'
+      responses:
+        '200':
+          description: Participant left session
+
+  /api/sessions/{sessionId}/leader:
+    patch:
+      tags: [Sessions]
+      summary: Designate a new leader (leader-only action)
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [newLeaderParticipantId]
+              properties:
+                newLeaderParticipantId:
+                  type: string
+      responses:
+        '200':
+          description: Leader updated
+        '403':
+          description: Forbidden for non-leader
+
+  /api/sessions/{sessionId}/complete:
+    post:
+      tags: [Sessions]
+      summary: Complete session (leader-only)
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: Session completed
+        '403':
+          description: Forbidden for non-leader
+
+  /api/sessions/{sessionId}/issues/{issueId}/activate:
+    post:
+      tags: [Issues]
+      summary: Set active issue (leader-only)
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+      responses:
+        '200':
+          description: Active issue changed
+
+  /api/sessions/{sessionId}/issues/{issueId}/rejoin:
+    post:
+      tags: [Issues]
+      summary: Mark participant as rejoined current evaluation
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+      responses:
+        '200':
+          description: Participant rejoined
+
+  /api/sessions/{sessionId}/issues/{issueId}/reveal:
+    post:
+      tags: [Votes]
+      summary: Reveal votes for active issue (leader-only)
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+      responses:
+        '200':
+          description: Votes revealed with computed average
+
+  /api/sessions/{sessionId}/issues/{issueId}/final-estimate:
+    post:
+      tags: [Votes]
+      summary: Save final estimate (leader-only)
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estimate]
+              properties:
+                estimate:
+                  type: string
+      responses:
+        '200':
+          description: Final estimate saved
+
+  /api/sessions/{sessionId}/issues/{issueId}/votes:
+    post:
+      tags: [Votes]
+      summary: Cast or change participant vote
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [participantId, selectedCard]
+              properties:
+                participantId:
+                  type: string
+                selectedCard:
+                  type: string
+      responses:
+        '200':
+          description: Vote stored
+
+  /api/sessions/{sessionId}/issues/{issueId}/votes/{participantId}:
+    delete:
+      tags: [Votes]
+      summary: Clear participant vote
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/IssueId'
+        - $ref: '#/components/parameters/ParticipantId'
+      responses:
+        '204':
+          description: Vote cleared
+
+components:
+  parameters:
+    TeamId:
+      in: path
+      name: teamId
+      required: true
+      schema:
+        type: string
+    SessionId:
+      in: path
+      name: sessionId
+      required: true
+      schema:
+        type: string
+    IssueId:
+      in: path
+      name: issueId
+      required: true
+      schema:
+        type: string
+    ParticipantId:
+      in: path
+      name: participantId
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    Team:
+      type: object
+      required: [id, name, isActive]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+
+    TeamCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    TeamUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        isActive:
+          type: boolean
+
+    AdminConfig:
+      type: object
+      properties:
+        baseIssueUrl:
+          type: string
+          nullable: true
+        themeDefault:
+          type: string
+          enum: [light, dark]
+
+    AdminConfigUpdateRequest:
+      type: object
+      properties:
+        baseIssueUrl:
+          type: string
+          nullable: true
+        themeDefault:
+          type: string
+          enum: [light, dark]
+
+    SessionSummary:
+      type: object
+      required: [id, name, sprintNumber, teamName, status, createdAt]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        sprintNumber:
+          type: string
+        teamName:
+          type: string
+        status:
+          type: string
+          enum: [active, completed]
+        createdAt:
+          type: string
+          format: date-time
+
+    SessionCreatedResponse:
+      type: object
+      required: [sessionId, leaderParticipantId, redirectPath]
+      properties:
+        sessionId:
+          type: string
+        leaderParticipantId:
+          type: string
+        redirectPath:
+          type: string
+
+    SessionDetail:
+      type: object
+      required: [session, participants, issues, activeIssueId, cardSet]
+      properties:
+        session:
+          $ref: '#/components/schemas/SessionSummary'
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+        activeIssueId:
+          type: string
+          nullable: true
+        cardSet:
+          type: array
+          items:
+            type: string
+
+    Participant:
+      type: object
+      required: [id, displayName, initials, isLeader, joinState, evaluationState]
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        initials:
+          type: string
+        isLeader:
+          type: boolean
+        joinState:
+          type: string
+          enum: [joined, left]
+        evaluationState:
+          type: string
+          enum: [active_issue_participating, browsing_other_issue]
+
+    Issue:
+      type: object
+      required: [id, issueType, issueKey, summary, isActive]
+      properties:
+        id:
+          type: string
+        issueType:
+          type: string
+          enum: [Story, Bug]
+        issueKey:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+          nullable: true
+        finalEstimate:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        fieldErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        rowErrors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+x-realtime:
+  transport: socketio
+  namespace: /sessions
+  events:
+    - name: session_created
+      payload:
+        sessionId: string
+    - name: issue_selected
+      payload:
+        sessionId: string
+        issueId: string
+    - name: vote_count_updated
+      payload:
+        sessionId: string
+        issueId: string
+        votesCast: integer
+        activeParticipants: integer
+    - name: votes_revealed
+      payload:
+        sessionId: string
+        issueId: string
+        votes:
+          type: array
+          items:
+            type: object
+    - name: leader_changed
+      payload:
+        sessionId: string
+        leaderParticipantId: string
+    - name: session_completed
+      payload:
+        sessionId: string
