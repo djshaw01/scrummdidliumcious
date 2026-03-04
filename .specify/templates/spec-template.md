@@ -98,6 +98,16 @@
 - **FR-009**: All third-party library dependencies MUST be justified in the specification
   with explicit rationale; standard library or existing approved dependencies MUST
   be evaluated as alternatives before introducing a new library.
+- **FR-010**: Web applications MUST use Flask, SQLAlchemy ORM, PostgreSQL as the
+  preferred database flavor, and Jinja2 for templating.
+- **FR-011**: Local development MUST support PostgreSQL running in Docker and the
+  final application MUST be packaged as a Docker container image.
+- **FR-012**: Code structure MUST remain self-documenting, include required
+  docstrings for modules/classes/functions/methods, document parameters and return
+  values for functions/methods, place private helpers below public interfaces, and
+  avoid mixing unrelated functions/classes in the same file.
+- **FR-013**: Python code formatting MUST be standardized with the `black`
+  formatter and enforcement expectations MUST be stated for local development and CI.
 
 *Example of marking unclear requirements:*
 

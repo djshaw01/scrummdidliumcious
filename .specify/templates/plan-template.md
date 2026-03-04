@@ -20,7 +20,12 @@
 **Language/Version**: [Python version, MUST be 3.11+ or NEEDS CLARIFICATION]  
 **Package Manager**: `uv` (required; pip and all other managers are prohibited)  
 **Primary Dependencies**: [list each library with one-line justification, or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Web Framework**: Flask (required)  
+**ORM**: SQLAlchemy (required)  
+**Templating**: Jinja2 (required for templating)  
+**Storage**: PostgreSQL (preferred database flavor)  
+**Local DB Runtime**: PostgreSQL via Docker (required baseline)  
+**Deployment Artifact**: Docker container image for final application (required)  
 **Testing**: [e.g., pytest or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]  
@@ -35,13 +40,20 @@
 - Python-only scope confirmed; no non-Python implementation introduced.
 - Python runtime baseline confirmed at version 3.11 or newer.
 - Package management confirmed as `uv` only; no pip/pipenv/poetry usage.
-- PEP 8 compliance strategy defined (formatter/linter/tooling and enforcement).
+- Flask, SQLAlchemy, Jinja2, and PostgreSQL stack requirements are satisfied.
+- Local PostgreSQL Docker workflow and final Docker packaging are defined.
+- PEP 8 compliance strategy defined and `black` formatter enforcement is specified.
 - SOLID design approach documented for core modules and dependency boundaries.
 - Testing plan includes only purposeful functional unit tests tied to requirements.
 - UX consistency criteria defined for user-facing changes and acceptance scenarios.
 - Performance targets and validation method (benchmark/profile) are defined.
 - Each third-party dependency listed with explicit justification; standard library
   and existing dependencies evaluated as alternatives first.
+- Docstring rules are defined for modules/classes/functions/methods with parameter
+  and return documentation for functions/methods.
+- File organization enforces related grouping, private helpers below public
+  interfaces, and avoids mixing unrelated functions/classes.
+- Plan defines how `black` is run and enforced in local development and CI.
 
 ## Project Structure
 

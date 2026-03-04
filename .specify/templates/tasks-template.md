@@ -52,7 +52,9 @@ validate functional behavior. Do not add tests only to increase test count.
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize Python project with uv (pyproject.toml + lockfile); document
       justification for each third-party dependency added
-- [ ] T003 [P] Configure PEP 8 linting/formatting tools
+- [ ] T002a Configure Flask + SQLAlchemy + Jinja2 baseline dependencies in
+  pyproject.toml using uv
+- [ ] T003 [P] Configure `black` formatting and PEP 8 linting tools; enforce in local workflow and CI
 
 ---
 
@@ -65,12 +67,15 @@ validate functional behavior. Do not add tests only to increase test count.
 Examples of foundational tasks (adjust based on your project):
 
 - [ ] T004 Setup database schema and migrations framework
+- [ ] T004a Provision PostgreSQL in Docker for local development
 - [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
+- [ ] T006 [P] Setup Flask routing, application factory, and middleware structure
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
 - [ ] T010 Document SOLID boundaries for shared modules/services
+- [ ] T010a Define module organization rules: one class per file preference,
+      private helpers below public interfaces, and no unrelated symbol mixing
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -163,6 +168,8 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX Code cleanup and refactoring
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional functional unit tests (when requirement-traceable) in tests/unit/
+- [ ] TXXX Enforce docstring completeness for modules/classes/functions/methods,
+      including parameter and return value docs for functions/methods
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
 
