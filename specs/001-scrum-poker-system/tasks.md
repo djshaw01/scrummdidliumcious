@@ -11,14 +11,14 @@
 
 **Purpose**: Project initialization and baseline tooling for a local mock-data-first web app.
 
-- [X] T001 Create project skeleton for app and tests in `app/` and `tests/`
-- [X] T002 Initialize Python project dependencies with `uv` in `pyproject.toml`
-- [X] T003 [P] Configure `black` and `ruff` defaults in `pyproject.toml`
-- [X] T004 [P] Add runtime environment template for inmemory/postgres modes in `.env.example`
-- [X] T005 Create Flask app factory and extension bootstrap in `app/__init__.py`
-- [X] T006 Add development/testing/postgres settings in `app/config.py`
-- [X] T007 [P] Add application container build definition in `docker/Dockerfile`
-- [X] T008 [P] Add local postgres compose stack in `docker/docker-compose.yml`
+- [ ] T001 Create project skeleton for app and tests in `app/` and `tests/`
+- [ ] T002 Initialize Python project dependencies with `uv` in `pyproject.toml`
+- [ ] T003 [P] Configure `black` and `ruff` defaults in `pyproject.toml`
+- [ ] T004 [P] Add runtime environment template for inmemory/postgres modes in `.env.example`
+- [ ] T005 Create Flask app factory and extension bootstrap in `app/__init__.py`
+- [ ] T006 Add development/testing/postgres settings in `app/config.py`
+- [ ] T007 [P] Add application container build definition in `docker/Dockerfile`
+- [ ] T008 [P] Add local postgres compose stack in `docker/docker-compose.yml`
 
 ---
 
@@ -28,16 +28,16 @@
 
 **⚠️ CRITICAL**: No user story implementation should start before this phase is complete.
 
-- [X] T009 Define core entities (Team, Session, Participant, Issue, Vote, VotingCardSet, AdminConfig) in `app/domain/entities/`
-- [X] T010 Define repository interfaces for sessions/admin/votes in `app/domain/repositories/`
-- [X] T011 Implement in-memory repositories and seed fixtures in `app/infra/repository_inmemory/`
-- [X] T012 Scaffold SQLAlchemy repository adapters for later persistence swap in `app/infra/repository_sqlalchemy/`
-- [X] T013 Implement shared domain errors and validation primitives in `app/domain/services/errors.py`
-- [X] T014 Create SocketIO bootstrap and room event helpers in `app/web/sockets.py`
-- [X] T015 Build shared base template with status messaging and theme hooks in `app/templates/shared/base.html`
-- [X] T016 Add shared client runtime utilities (API/event/theme) in `app/static/js/app.js`
-- [X] T017 Establish global CSS tokens, breakpoints, and light/dark theme variables in `app/static/css/styles.css`
-- [X] T018 Add reusable pytest fixtures and factory data in `tests/conftest.py`
+- [ ] T009 Define core entities (Team, Session, Participant, Issue, Vote, VotingCardSet, AdminConfig) in `app/domain/entities/`
+- [ ] T010 Define repository interfaces for sessions/admin/votes in `app/domain/repositories/`
+- [ ] T011 Implement in-memory repositories and seed fixtures in `app/infra/repository_inmemory/`
+- [ ] T012 Scaffold SQLAlchemy repository adapters for later persistence swap in `app/infra/repository_sqlalchemy/`
+- [ ] T013 Implement shared domain errors and validation primitives in `app/domain/services/errors.py`
+- [ ] T014 Create SocketIO bootstrap and room event helpers in `app/web/sockets.py`
+- [ ] T015 Build shared base template with status messaging and theme hooks in `app/templates/shared/base.html`
+- [ ] T016 Add shared client runtime utilities (API/event/theme) in `app/static/js/app.js`
+- [ ] T017 Establish global CSS tokens, breakpoints, and light/dark theme variables in `app/static/css/styles.css`
+- [ ] T018 Add reusable pytest fixtures and factory data in `tests/conftest.py`
 
 **Checkpoint**: Foundation complete; stories can now be built and tested independently.
 
