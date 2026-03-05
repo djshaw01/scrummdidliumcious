@@ -1,0 +1,52 @@
+[project]
+name = "scrummdidliumcious"
+version = "0.1.0"
+description = "Locally-runnable SCRUM poker with real-time collaborative voting"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1",
+    "flask-socketio>=5.5",
+    "flask-wtf>=1.2",
+    "wtforms>=3.2",
+    "python-dotenv>=1.0",
+    "sqlalchemy>=2.0",
+    "simple-websocket>=1.1",
+]
+
+[project.optional-dependencies]
+postgres = [
+    "psycopg[binary]>=3.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3",
+    "pytest-flask>=1.3",
+    "pytest-cov>=6.0",
+    "black>=25.0",
+    "ruff>=0.9",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"

@@ -1,0 +1,49 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Session Detail{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1 class="page-header__title">Session Detail</h1>
+  <a href="/" class="btn btn--secondary">← History</a>
+</div>
+
+{% if session_id %}
+  <p class="muted mb-1">Session ID: <code>{{ session_id }}</code></p>
+{% endif %}
+
+<div class="session-layout mt-1">
+
+  <aside class="session-layout__nav">
+    <div class="placeholder-section">
+      <h3>Issue Navigation</h3>
+      <p class="muted">
+        Issue cards (25% column) with type emoji, key link, summary,
+        and estimate — Phase 3 (US1).
+      </p>
+      <span class="stage-badge">🚧 Phase 3 (US1)</span>
+    </div>
+  </aside>
+
+  <section class="session-layout__detail">
+    <div class="placeholder-section">
+      <h2>Issue Detail &amp; Live Voting</h2>
+      <p>
+        Vote cards, anonymised placeholders, reveal, average calculation,
+        and final estimate save — Phase 3 (US1).
+      </p>
+      <ul>
+        <li>✓ Participant status row with leader indicator</li>
+        <li>✓ Cast, change, and clear votes before reveal</li>
+        <li>✓ Real-time vote count (N/M) and placeholders</li>
+        <li>✓ Leader reveals → all clients see selected cards + average</li>
+        <li>✓ Save a final or custom estimate per issue</li>
+        <li>✓ Automatic leader reassignment if leader leaves</li>
+      </ul>
+      <span class="stage-badge">🚧 Phase 3 (US1)</span>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

@@ -11,15 +11,15 @@
 
 **Purpose**: Project initialization and baseline tooling for a local mock-data-first web app.
 
-- [ ] T001 Create project skeleton for app and tests in `app/` and `tests/`
-- [ ] T002 Initialize Python project dependencies with `uv` in `pyproject.toml`
-- [ ] T003 [P] Configure `black` and `ruff` defaults in `pyproject.toml`
-- [ ] T004 [P] Add runtime environment template for inmemory/postgres modes in `.env.example`
-- [ ] T005 Create Flask app factory and extension bootstrap in `app/__init__.py`
-- [ ] T006 Add development/testing/postgres settings in `app/config.py`
-- [ ] T007 [P] Add application container build definition in `docker/Dockerfile`
-- [ ] T008 [P] Add local postgres compose stack in `docker/docker-compose.yml`
-- [ ] T009 Document Stage 1 (Setup) run commands and expected app health checks in `README.md`
+- [x] T001 Create project skeleton for app and tests in `app/` and `tests/`
+- [x] T002 Initialize Python project dependencies with `uv` in `pyproject.toml`
+- [x] T003 [P] Configure `black` and `ruff` defaults in `pyproject.toml`
+- [x] T004 [P] Add runtime environment template for inmemory/postgres modes in `.env.example`
+- [x] T005 Create Flask app factory and extension bootstrap in `app/__init__.py`
+- [x] T006 Add development/testing/postgres settings in `app/config.py`
+- [x] T007 [P] Add application container build definition in `docker/Dockerfile`
+- [x] T008 [P] Add local postgres compose stack in `docker/docker-compose.yml`
+- [x] T009 Document Stage 1 (Setup) run commands and expected app health checks in `README.md`
 
 ---
 

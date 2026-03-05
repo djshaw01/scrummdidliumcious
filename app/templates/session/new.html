@@ -1,0 +1,26 @@
+{% extends "shared/base.html" %}
+
+{% block title %}New Session{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">New Session</h1>
+  <a href="/" class="btn btn--secondary">← Back to History</a>
+</div>
+
+<div class="placeholder-section">
+  <h2>Session creation form — coming in Phase 4 (US2)</h2>
+  <p>
+    Create a new estimation session by selecting a team, entering session metadata,
+    and uploading a CSV of backlog issues.
+  </p>
+  <ul>
+    <li>✓ Team selection with most-recent session name prefill</li>
+    <li>✓ Sprint number and voting card set selection</li>
+    <li>✓ CSV upload — required fields in any column order</li>
+    <li>✓ Row-level CSV validation feedback</li>
+    <li>✓ Submitting navigates straight to the new session detail page</li>
+  </ul>
+  <span class="stage-badge">🚧 Phase 4 (US2)</span>
+</div>
+{% endblock %}

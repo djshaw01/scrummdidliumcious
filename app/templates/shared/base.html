@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Scrum Poker{% endblock %} · Scrummdidliumcious</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="/" class="nav__brand">🃏 Scrum Poker</a>
+      <ul class="nav__links">
+        <li>
+          <a href="/"
+             class="nav__link{% if request.path == '/' %} nav__link--active{% endif %}">
+            History
+          </a>
+        </li>
+        <li>
+          <a href="/sessions/new"
+             class="nav__link{% if request.path == '/sessions/new' %} nav__link--active{% endif %}">
+            New Session
+          </a>
+        </li>
+        <li>
+          <a href="/admin/"
+             class="nav__link{% if request.path.startswith('/admin') %} nav__link--active{% endif %}">
+            Admin
+          </a>
+        </li>
+      </ul>
+      <button class="theme-toggle"
+              onclick="window.toggleTheme()"
+              aria-label="Toggle light / dark theme"
+              title="Toggle theme">◐</button>
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages">
+        {% for category, message in messages %}
+          <div class="message message--{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="/socket.io/socket.io.js" onerror="console.info('SocketIO client not loaded — real-time features inactive')"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

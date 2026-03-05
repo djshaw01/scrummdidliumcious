@@ -1,0 +1,25 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Session History{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-header__title">Session History</h1>
+  <a href="/sessions/new" class="btn btn--primary">+ New Session</a>
+</div>
+
+<div class="placeholder-section">
+  <h2>Session list — coming in Phase 5 (US3)</h2>
+  <p>
+    Sessions will be listed here, sorted by most recent, with filters for
+    session name, sprint, and team.
+  </p>
+  <ul>
+    <li>✓ Sorted most-recent first</li>
+    <li>✓ Filter by session name, sprint, and team</li>
+    <li>✓ Open any session directly from this page</li>
+    <li>✓ New sessions appear here in real time for all viewers</li>
+  </ul>
+  <span class="stage-badge">🚧 Phase 5 (US3)</span>
+</div>
+{% endblock %}
