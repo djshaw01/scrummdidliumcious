@@ -49,7 +49,7 @@ Deliver a dedicated home/landing page that displays the exact visible title `SCR
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
+specs/001-home-landing-page/
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output (/speckit.plan command)
 ├── data-model.md        # Phase 1 output (/speckit.plan command)
@@ -91,3 +91,12 @@ docker/
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | None | N/A | N/A |
+
+## Post-Design Constitution Check
+
+- PASS: Phase 0/1 artifacts (`research.md`, `data-model.md`, `contracts/`, `quickstart.md`) are present and consistent with Python 3.11+ and `uv` workflow.
+- PASS: Required stack usage (Flask, SQLAlchemy, Alembic, Pydantic, PostgreSQL, Jinja2) is preserved in technical context and design decisions.
+- PASS: UX consistency and performance targets remain measurable and tied to acceptance expectations.
+- PASS: Dependency additions are constrained to required stack; no optional third-party UI framework introduced.
+- PASS: Planned test strategy remains purposeful and requirement-traceable.
+- PASS: No constitution violations identified; complexity exceptions are not required.
