@@ -98,7 +98,8 @@
 - **FR-009**: All third-party library dependencies MUST be justified in the specification
   with explicit rationale; standard library or existing approved dependencies MUST
   be evaluated as alternatives before introducing a new library.
-- **FR-010**: Web applications MUST use Flask, SQLAlchemy ORM, PostgreSQL as the
+- **FR-010**: Web applications MUST use Flask, SQLAlchemy ORM, Alembic for
+  schema migrations, Pydantic for data modeling/validation, PostgreSQL as the
   preferred database flavor, and Jinja2 for templating.
 - **FR-011**: Local development MUST support PostgreSQL running in Docker and the
   final application MUST be packaged as a Docker container image.
@@ -108,6 +109,10 @@
   avoid mixing unrelated functions/classes in the same file.
 - **FR-013**: Python code formatting MUST be standardized with the `black`
   formatter and enforcement expectations MUST be stated for local development and CI.
+- **FR-014**: Database schema changes MUST be implemented and delivered via
+  Alembic migration revisions.
+- **FR-015**: Data exchanged across API and service boundaries MUST be validated
+  with Pydantic models.
 
 *Example of marking unclear requirements:*
 

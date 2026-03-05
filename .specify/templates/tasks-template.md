@@ -52,7 +52,7 @@ validate functional behavior. Do not add tests only to increase test count.
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize Python project with uv (pyproject.toml + lockfile); document
       justification for each third-party dependency added
-- [ ] T002a Configure Flask + SQLAlchemy + Jinja2 baseline dependencies in
+- [ ] T002a Configure Flask + SQLAlchemy + Alembic + Pydantic + Jinja2 baseline dependencies in
   pyproject.toml using uv
 - [ ] T003 [P] Configure `black` formatting and PEP 8 linting tools; enforce in local workflow and CI
 
@@ -66,7 +66,8 @@ validate functional behavior. Do not add tests only to increase test count.
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
+- [ ] T004 Setup database schema and Alembic migrations framework
+- [ ] T004b Define Pydantic models for boundary validation and shared data contracts
 - [ ] T004a Provision PostgreSQL in Docker for local development
 - [ ] T005 [P] Implement authentication/authorization framework
 - [ ] T006 [P] Setup Flask routing, application factory, and middleware structure

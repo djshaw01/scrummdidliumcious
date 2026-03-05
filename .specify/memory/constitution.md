@@ -1,18 +1,17 @@
 <!--
 Sync Impact Report
-- Version change: 1.3.0 → 1.4.0
+- Version change: 1.4.0 → 1.5.0
 - Modified principles:
-	- VI. Responsible Dependency Management: expanded to include mandated framework/database/ORM/templating stack
-	- I. Python 3.11+ Only, uv Package Management & PEP 8 Compliance (NON-NEGOTIABLE): expanded to require Black formatter
+	- VI. Responsible Dependency Management: expanded to mandate Alembic for database migrations and Pydantic for data modeling/validation
 - Added sections:
-	- VII. Containerized Development & Delivery
-	- VIII. Self-Documenting Code & Modular File Organization
+	- None
 - Removed sections:
 	- None
 - Templates requiring updates:
 	- ✅ updated: .specify/templates/plan-template.md
 	- ✅ updated: .specify/templates/spec-template.md
 	- ✅ updated: .specify/templates/tasks-template.md
+	- ✅ updated: specs/001-scrum-poker-system/quickstart.md
 	- ⚠ pending: .specify/templates/commands/*.md (directory not present in repository)
 - Deferred TODOs:
 	- None
@@ -73,8 +72,12 @@ specification. Transitive dependency footprint MUST be considered. Libraries wit
 unclear maintenance status, restrictive licenses, broad scope creep, or
 unnecessary API surface MUST be escalated for explicit approval before adoption.
 The application stack is fixed: Flask for web application behavior, SQLAlchemy
-for ORM, PostgreSQL as the preferred database flavor, and Jinja2 for templating.
-Substitutions require formal constitution amendment.
+for ORM, Alembic for schema migration generation and execution, Pydantic for
+data modeling and validation, PostgreSQL as the preferred database flavor, and
+Jinja2 for templating. Database schema changes MUST be represented through
+Alembic revisions, and external/internal data contracts MUST be validated with
+Pydantic models at application boundaries. Substitutions require formal
+constitution amendment.
 Rationale: uncontrolled dependency growth increases attack surface, maintenance
 burden, licensing risk, and onboarding complexity.
 
@@ -108,7 +111,10 @@ review quality, and long-term maintainability.
 - All package and environment management MUST use `uv`; `pip` and all other package
   managers are prohibited without exception.
 - Application web framework MUST be Flask; ORM MUST be SQLAlchemy; templating
-	MUST use Jinja2; PostgreSQL is the preferred database flavor.
+	MUST use Jinja2; migrations MUST use Alembic; data models/validation MUST use
+	Pydantic; PostgreSQL is the preferred database flavor.
+- Database schema changes MUST be shipped via Alembic migration revisions.
+- API/request/response/domain boundary validation MUST use Pydantic models.
 - Local development MUST support PostgreSQL in Docker or be configured to use PostgreSQL on an external server
 -  Release artifacts MUST include a Dockerized application image.
 - Architecture and refactoring decisions MUST explicitly preserve SOLID intent.
@@ -133,7 +139,8 @@ constitution checks at planning time and before merge. Reviewers MUST reject
 changes that violate Python-only constraints, PEP 8 compliance, SOLID structure,
 purposeful testing criteria, UX consistency expectations, defined performance
 targets, uv-only package management, required Flask/SQLAlchemy/PostgreSQL/Jinja2
-stack constraints, containerization requirements, or unjustified dependency
+stack constraints, required Alembic migration usage, required Pydantic
+validation usage, containerization requirements, or unjustified dependency
 additions. Reviewers MUST also reject code that is not `black`-formatted, code
 that lacks required docstrings, or code that mixes unrelated responsibilities in
 a single file. Exceptions require
@@ -156,4 +163,4 @@ Compliance review expectations:
 - Every pull request MUST state compliance with all core principles.
 - Violations MUST be tracked with remediation tasks or rejected prior to merge.
 
-**Version**: 1.4.0 | **Ratified**: 2026-02-19 | **Last Amended**: 2026-03-04
+**Version**: 1.5.0 | **Ratified**: 2026-02-19 | **Last Amended**: 2026-03-05

@@ -78,6 +78,11 @@ uv run black .
 uv run ruff check .
 ```
 
+## 9. Migration and data validation expectations
+- Database schema changes are managed through Alembic revisions.
+- Apply migrations before running against Postgres-backed environments.
+- Request/response and domain boundary validation is implemented with Pydantic models.
+
 ## Notes for this iteration
 - Persistence is intentionally mock-first so local interaction is immediate.
 - Service and repository interfaces should remain stable when replacing in-memory adapters with SQLAlchemy/Postgres adapters later.

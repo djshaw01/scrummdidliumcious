@@ -22,6 +22,8 @@
 **Primary Dependencies**: [list each library with one-line justification, or NEEDS CLARIFICATION]  
 **Web Framework**: Flask (required)  
 **ORM**: SQLAlchemy (required)  
+**Migrations**: Alembic (required for database schema migrations)  
+**Data Modeling/Validation**: Pydantic (required at application boundaries)  
 **Templating**: Jinja2 (required for templating)  
 **Storage**: PostgreSQL (preferred database flavor)  
 **Local DB Runtime**: PostgreSQL via Docker (required baseline)  
@@ -40,7 +42,10 @@
 - Python-only scope confirmed; no non-Python implementation introduced.
 - Python runtime baseline confirmed at version 3.11 or newer.
 - Package management confirmed as `uv` only; no pip/pipenv/poetry usage.
-- Flask, SQLAlchemy, Jinja2, and PostgreSQL stack requirements are satisfied.
+- Flask, SQLAlchemy, Alembic, Pydantic, Jinja2, and PostgreSQL stack
+  requirements are satisfied.
+- Database schema change workflow is defined using Alembic revisions.
+- Request/response/domain validation strategy is defined with Pydantic models.
 - Local PostgreSQL Docker workflow and final Docker packaging are defined.
 - PEP 8 compliance strategy defined and `black` formatter enforcement is specified.
 - SOLID design approach documented for core modules and dependency boundaries.
