@@ -10,6 +10,7 @@ We are first building a SCRUM poker system which will allow our developers to vo
       - Should allow the admin(s) to set the base URL for navigating to issue details in the agile system the team is using (Azure DevOps, Attlasian JIRA, etc)
 
     - The Entry page will display a list of existing sessions that have been performed.
+       - Should be presented in a table
        - Should should order the list by most recent to least
        - Should support filtering by session name, sprint number, and/or team
        - Should have a button which allows a user to begin a new session
