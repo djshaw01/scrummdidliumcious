@@ -37,4 +37,9 @@ def create_app(config_name: str | None = None) -> Flask:
     app.register_blueprint(sessions_bp)
     app.register_blueprint(admin_bp)
 
+    from app.infra import init_repositories
+
+    init_repositories(app)
+
     return app
+

@@ -3,6 +3,8 @@
 import pytest
 
 from app import create_app
+from app.domain.repositories import RepositoryContext
+from app.infra.repository_inmemory import create_repositories, seed_repositories
 
 
 @pytest.fixture(scope="session")
@@ -22,3 +24,22 @@ def client(app):
 def runner(app):
     """Return a Flask CLI test runner."""
     return app.test_cli_runner()
+
+
+@pytest.fixture()
+def repos() -> RepositoryContext:
+    """Return a fresh, seeded RepositoryContext for each test function.
+
+    Uses a separate set of in-memory repos from the app so tests can mutate
+    data freely without affecting other tests or the running application.
+    """
+    ctx = create_repositories()
+    seed_repositories(ctx)
+    return ctx
+
+
+@pytest.fixture()
+def empty_repos() -> RepositoryContext:
+    """Return a fresh, un-seeded RepositoryContext for tests that need a clean slate."""
+    return create_repositories()
+

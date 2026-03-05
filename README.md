@@ -90,7 +90,7 @@ functionality you can run, test, and validate independently before moving on.
 
 ---
 
-### Stage 1 — Setup *(current)*
+### Stage 1 — Setup ✅
 
 **What works:** Flask app factory, stub routes, navigable skeleton pages in
 light and dark mode.
@@ -122,23 +122,32 @@ uv run pytest tests/unit/test_smoke.py -v
 
 ---
 
-### Stage 2 — Foundational
+### Stage 2 — Foundational *(current)*
 
-**What's added:** Domain entities, repository interfaces, in-memory seed
-data, SocketIO room helpers, shared base template fully wired, CSS/JS foundations.
+**What's added:** Domain entities (7 dataclasses, 6 enums), repository interfaces
+(7 ABCs + `RepositoryContext`), in-memory adapters with realistic seed data
+(2 teams, 3 sessions, 8 participants, 10 issues, 2 votes), SQLAlchemy ORM scaffolds,
+domain error hierarchy, SocketIO room helpers, base template, CSS/JS foundations.
 
 ```bash
 # Start the app (same command)
 uv run flask --app app run --port 5000
 
-# Run unit and integration tests
-uv run pytest tests/unit tests/integration -v
+# Run the full Phase 2 unit suite (47 tests)
+uv run pytest tests/unit/ -v
+
+# Run a single test class for fast feedback
+uv run pytest tests/unit/test_inmemory_repos.py::TestSeedData -v
+
+# Run with coverage report
+uv run pytest tests/unit/ --cov=app --cov-report=term-missing
 ```
 
 **Verify the stage is working:**
-- App starts with seeded in-memory data (teams, sessions visible).
-- All pages load without error.
-- Browser console shows `connected` SocketIO event after joining a session.
+- App starts and all four stub pages load without error (47 tests pass).
+- 15 entity construction tests confirm defaults, enums, and UUID uniqueness.
+- 27 repository tests confirm seed data integrity (2 teams, 3 sessions, active issue, hidden votes, leader wired to Alice).
+- Browser console shows `connected` SocketIO event when the page loads.
 
 ---
 

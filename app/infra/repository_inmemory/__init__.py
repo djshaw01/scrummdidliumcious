@@ -1,5 +1,13 @@
 """In-memory repository adapters with seed fixture data.
 
-Implemented in Phase 2 (Foundational). Used as the default DATA_BACKEND
-for local development and all test runs.
+Public API surface:
+
+- :func:`create_repositories` — create a fresh :class:`~app.domain.repositories.RepositoryContext`
+- :func:`seed_repositories` — populate it with development fixture data
 """
+
+from app.infra.repository_inmemory.repos import create_repositories
+from app.infra.repository_inmemory.seed import seed_repositories
+
+__all__ = ["create_repositories", "seed_repositories"]
+

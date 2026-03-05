@@ -29,17 +29,17 @@
 
 **⚠️ CRITICAL**: No user story implementation should start before this phase is complete.
 
-- [ ] T010 Define core entities (Team, Session, Participant, Issue, Vote, VotingCardSet, AdminConfig) in `app/domain/entities/`
-- [ ] T011 Define repository interfaces for sessions/admin/votes in `app/domain/repositories/`
-- [ ] T012 Implement in-memory repositories and seed fixtures in `app/infra/repository_inmemory/`
-- [ ] T013 Scaffold SQLAlchemy repository adapters for later persistence swap in `app/infra/repository_sqlalchemy/`
-- [ ] T014 Implement shared domain errors and validation primitives in `app/domain/services/errors.py`
-- [ ] T015 Create SocketIO bootstrap and room event helpers in `app/web/sockets.py`
-- [ ] T016 Build shared base template with status messaging and theme hooks in `app/templates/shared/base.html`
-- [ ] T017 Add shared client runtime utilities (API/event/theme) in `app/static/js/app.js`
-- [ ] T018 Establish global CSS tokens, breakpoints, and light/dark theme variables in `app/static/css/styles.css`
-- [ ] T019 Add reusable pytest fixtures and factory data in `tests/conftest.py`
-- [ ] T020 Document Stage 2 (Foundational) run/verification commands in `README.md`
+- [x] T010 Define core entities (Team, Session, Participant, Issue, Vote, VotingCardSet, AdminConfig) in `app/domain/entities/`
+- [x] T011 Define repository interfaces for sessions/admin/votes in `app/domain/repositories/`
+- [x] T012 Implement in-memory repositories and seed fixtures in `app/infra/repository_inmemory/`
+- [x] T013 Scaffold SQLAlchemy repository adapters for later persistence swap in `app/infra/repository_sqlalchemy/`
+- [x] T014 Implement shared domain errors and validation primitives in `app/domain/services/errors.py`
+- [x] T015 Create SocketIO bootstrap and room event helpers in `app/web/sockets.py`
+- [x] T016 Build shared base template with status messaging and theme hooks in `app/templates/shared/base.html`
+- [x] T017 Add shared client runtime utilities (API/event/theme) in `app/static/js/app.js`
+- [x] T018 Establish global CSS tokens, breakpoints, and light/dark theme variables in `app/static/css/styles.css`
+- [x] T019 Add reusable pytest fixtures and factory data in `tests/conftest.py`
+- [x] T020 Document Stage 2 (Foundational) run/verification commands in `README.md`
 
 **Checkpoint**: Foundation complete; stories can now be built and tested independently.
 
