@@ -62,6 +62,8 @@ specs/001-home-landing-page/
 ```text
 app/
 ├── __init__.py
+├── models/
+│   └── landing_page_view.py
 ├── routes/
 │   └── home.py
 ├── templates/
@@ -74,6 +76,10 @@ images/
 └── scrumm_logo.svg
 
 tests/
+├── contract/
+│   └── test_home_page_contract.py
+├── integration/
+│   └── test_home_page_performance.py
 └── unit/
     └── test_home_page.py
 

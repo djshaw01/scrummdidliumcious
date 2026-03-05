@@ -48,7 +48,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement LandingPageView boundary model and invariants in app/models/landing_page_view.py
+- [ ] T015 [US1] Implement LandingPageView as a Pydantic boundary model with invariants in app/models/landing_page_view.py
 - [ ] T016 [US1] Implement home route context assembly for title/logo fields in app/routes/home.py
 - [ ] T017 [US1] Implement landing page template with title and logo markup in app/templates/home.html
 - [ ] T018 [US1] Implement logo-specific CSS rules for top-left anchor, 100em height, and width auto in app/static/styles/home.css
@@ -107,6 +107,8 @@
 - [ ] T030 [P] Add documentation for running black and pytest workflows in README.md
 - [ ] T031 Validate quickstart steps against implemented files in specs/001-home-landing-page/quickstart.md
 - [ ] T032 Verify OpenAPI contract and route behavior remain aligned in specs/001-home-landing-page/contracts/home-page.openapi.yaml
+- [ ] T033 Enforce docstring completeness with parameter/return docs in app/__init__.py, app/routes/home.py, app/models/landing_page_view.py, and tests/unit/test_home_page.py
+- [ ] T034 Validate SC-004 usability protocol (5 viewers, 10-second recognition check, 4/5 pass threshold) in specs/001-home-landing-page/quickstart.md
 
 ---
 
