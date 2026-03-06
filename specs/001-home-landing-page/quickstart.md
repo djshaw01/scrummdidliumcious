@@ -41,3 +41,35 @@ uv run black --check .
 ```bash
 docker build -f docker/Dockerfile -t scrummdidliumcious:home-landing .
 ```
+
+## Navigation Insertion Points (US2 — Future Navigation Baseline)
+
+The home landing page reserves dedicated extension regions for future navigation controls.
+No navigation links exist yet; the foundation is structurally ready.
+
+### Where to add navigation
+
+- **Template**: `app/templates/home.html`
+  - The `<nav class="nav-baseline" data-nav-placeholder="true">` element is the insertion point.
+  - Add navigation `<a>` elements or sub-components inside this `<nav>` block.
+  - Remove or repurpose the HTML comment `<!-- Future navigation insertion point -->` when populating nav items.
+
+- **Styles**: `app/static/styles/home.css`
+  - `.nav-baseline` provides baseline flex layout and spacing.
+  - Add child selectors (e.g., `.nav-baseline a`, `.nav-baseline .nav-item`) to style link items.
+
+- **Base template**: `app/templates/base.html`
+  - The `{% block nav %}{% endblock %}` extension block allows page-specific nav overrides.
+
+### SC-004 Usability Protocol
+
+**Goal**: Verify 4 out of 5 viewers can identify the brand within 10 seconds of viewing the page.
+
+**Validation steps**:
+1. Load `http://localhost:5000/` in a fresh browser session.
+2. Present to each viewer without context or instruction.
+3. Ask: "What product or service does this page represent?"
+4. Record whether the viewer correctly identifies *SCRUMMDidliumcious* within 10 seconds.
+5. Pass threshold: 4 out of 5 viewers must succeed.
+
+**Pass criteria**: Logo and title visible within the first viewport at all tested breakpoints.

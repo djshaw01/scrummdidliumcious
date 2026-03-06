@@ -1,0 +1,141 @@
+/* home.css — Global style scaffold and design token variables */
+
+:root {
+    --color-bg: #ffffff;
+    --color-text: #1a1a1a;
+    --color-brand: #2c3e50;
+    --color-nav-bg: transparent;
+
+    --logo-height: 5em;
+    --logo-width: auto;
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 4rem;
+
+    --font-family-base: system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: var(--font-family-base);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* ---------------------------------------------------------------------------
+   Home layout
+   --------------------------------------------------------------------------- */
+
+.home-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ---------------------------------------------------------------------------
+   Hero / branding surface
+   --------------------------------------------------------------------------- */
+
+.hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: var(--spacing-md);
+}
+
+.hero__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.hero__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-brand);
+}
+
+/* ---------------------------------------------------------------------------
+   Logo — top-left anchor, 100em height, auto width (aspect-ratio preserved)
+   --------------------------------------------------------------------------- */
+
+.logo {
+    display: block;
+}
+
+.logo--top-left {
+    align-self: flex-start;
+}
+
+.logo--100em {
+    height: var(--logo-height); /* 100em */
+    width: var(--logo-width);   /* auto — preserves aspect ratio */
+}
+
+.logo--aspect-auto {
+    width: auto;
+    object-fit: contain;
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation baseline — spacing/alignment for future nav container
+   --------------------------------------------------------------------------- */
+
+.nav-baseline {
+    background-color: var(--color-nav-bg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive breakpoints — US3
+   --------------------------------------------------------------------------- */
+
+/* Mobile-first: base styles apply at all sizes */
+
+/* Tablet and above */
+@media (min-width: 48em) {
+    .hero--responsive {
+        padding: var(--spacing-lg);
+    }
+
+    .hero__title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Desktop and above */
+@media (min-width: 64em) {
+    .hero--responsive {
+        padding: var(--spacing-xl);
+    }
+
+    .hero__title {
+        font-size: 3rem;
+    }
+}
+
+/* Safe spacing on small viewports to prevent logo overflow */
+@media (max-width: 47.9375em) {
+    .logo--100em {
+        max-width: 100%;
+        height: auto;
+        max-height: var(--logo-height);
+    }
+}

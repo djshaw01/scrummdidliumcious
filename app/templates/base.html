@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SCRUMMDidliumcious{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}" />
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    {% block header %}{% endblock %}
+    {% block nav %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+</html>
