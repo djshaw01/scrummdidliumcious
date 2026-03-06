@@ -1,7 +1,8 @@
 SCRUMM poker feature.
 
-We are first building a SCRUM poker system which will allow our developers to vote on story points, which build consensus on how complex each task is.
-- This feature should incorpate a responsive UI and support both Light and Dark modes selectable by the user.
+We adding a SCRUM poker system which will allow our developers to vote on story points, which build consensus on how complex each task is.
+- This feature should incorpate a responsive UI and support both Light and Dark modes selectable by the user. These controls should be integrated into the existing home page.
+- This new feature will need to tie into the navigation for the home page.
 - This feature will require four pages
     
     - An Admin configuration page
