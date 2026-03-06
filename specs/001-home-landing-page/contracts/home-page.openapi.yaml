@@ -1,0 +1,29 @@
+openapi: 3.0.3
+info:
+  title: Home Landing Page Contract
+  version: 0.1.0
+  description: Contract for the branded landing page endpoint.
+servers:
+  - url: http://localhost:5000
+paths:
+  /:
+    get:
+      summary: Render home landing page
+      description: Returns the home page with branded title and logo placement.
+      operationId: getHomeLandingPage
+      tags:
+        - Home
+      responses:
+        '200':
+          description: Landing page rendered successfully.
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                default:
+                  summary: HTML page content
+                  value: "<!doctype html><html><head><title>SCRUMMDidliumcious</title></head><body>...</body></html>"
+        '500':
+          description: Unexpected server-side rendering failure.
+components: {}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}SCRUMMDidliumcious{% endblock %}
+
+{% block content %}
+<main class="home-layout">
+    <!-- Hero / branding surface -->
+    <section
+        class="hero hero--responsive"
+        data-region="hero"
+        aria-label="SCRUMMDidliumcious branded hero"
+    >
+        <div class="hero__brand">
+            <img
+                class="logo logo--top-left logo--100em logo--aspect-auto"
+                src="{{ view.logo_asset_path }}"
+                alt="{{ view.logo_fallback_text }}"
+                data-logo-fallback="true"
+                onerror="this.style.display='none'; var fb=document.getElementById('logo-fallback'); if(fb){fb.style.display='inline';}"
+            />
+            <span id="logo-fallback" class="logo__fallback" style="display:none;" aria-hidden="true">
+                {{ view.logo_fallback_text }}
+            </span>
+        </div>
+    </section>
+
+    <!-- Navigation baseline — reserved for future navigation controls -->
+    <nav
+        class="nav-baseline"
+        data-nav-placeholder="true"
+        aria-label="Primary navigation (coming soon)"
+    >
+        <!-- Future navigation insertion point: add nav items here -->
+    </nav>
+</main>
+{% endblock %}
