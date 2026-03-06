@@ -88,7 +88,7 @@ docker/
 └── docker-compose.yml
 ```
 
-**Structure Decision**: Use a single Flask web application structure with server-rendered templates. Keep the existing `images/scrumm_logo.svg` as the source asset and reference it directly for the landing-page logo requirement, while placing page-specific styling under `app/static/styles/` and functional tests under `tests/unit/`.
+**Structure Decision**: Use a single Flask web application structure with server-rendered templates. Keep the existing `images/scrumm_logo.svg` as the source asset and reference it directly for the landing-page logo requirement, while placing page-specific styling under app/static/styles/ and organizing requirement-traceable tests across tests/contract/, tests/integration/, and tests/unit/.
 
 ## Complexity Tracking
 

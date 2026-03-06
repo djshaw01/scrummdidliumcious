@@ -77,7 +77,7 @@ As a visitor on different screen sizes, I want the page to remain readable and v
 - **FR-004**: The logo MUST be positioned in the top-left region of the landing page on initial load, anchored to the top-left of the main content container.
 - **FR-005**: The logo MUST render with a vertical size of 100em.
 - **FR-006**: The logo MUST preserve its original aspect ratio at all supported viewport sizes.
-- **FR-007**: The landing page MUST maintain a coherent structure suitable for adding future navigation elements without repurposing the page.
+- **FR-007**: The landing page MUST include a dedicated, non-interactive navigation placeholder region that is visible on initial render and can accept future navigation elements without changing the title/logo hierarchy or causing layout overlap.
 - **FR-008**: The landing page MUST remain readable and visually coherent on desktop (>=1024px) and mobile (<=430px) viewport categories, with no title/logo overlap.
 - **FR-009**: If the logo asset cannot be loaded, the page MUST still present the page title and preserve usable layout.
 - **FR-010**: Acceptance testing MUST verify title text accuracy, logo source usage, top-left placement, 100em vertical sizing, and preserved aspect ratio.
