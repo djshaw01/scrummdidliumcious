@@ -17,11 +17,11 @@
 
 **Purpose**: Project initialization and development tooling alignment
 
-- [ ] T001 Add SCRUM poker runtime dependencies with uv in `pyproject.toml`
-- [ ] T002 Configure Flask app settings for PostgreSQL/WebSocket/theme defaults in `app/__init__.py`
-- [ ] T003 [P] Add SCRUM poker base stylesheet and script directories in `app/static/styles/poker.css` and `app/static/scripts/poker-session.js`
-- [ ] T004 [P] Add SCRUM poker route module placeholders in `app/routes/poker_pages.py`, `app/routes/poker_api.py`, and `app/routes/admin.py`
-- [ ] T005 [P] Add developer workflow commands and CI `black --check` enforcement in `README.md` and `.github/workflows/ci.yml`
+- [X] T001 Add SCRUM poker runtime dependencies with uv in `pyproject.toml`
+- [X] T002 Configure Flask app settings for PostgreSQL/WebSocket/theme defaults in `app/__init__.py`
+- [X] T003 [P] Add SCRUM poker base stylesheet and script directories in `app/static/styles/poker.css` and `app/static/scripts/poker-session.js`
+- [X] T004 [P] Add SCRUM poker route module placeholders in `app/routes/poker_pages.py`, `app/routes/poker_api.py`, and `app/routes/admin.py`
+- [X] T005 [P] Add developer workflow commands and CI `black --check` enforcement in `README.md` and `.github/workflows/ci.yml`
 
 ---
 

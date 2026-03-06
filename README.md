@@ -70,3 +70,41 @@ uv run black .
 ```bash
 docker build -f docker/Dockerfile -t scrummdidliumcious:home-landing .
 ```
+
+## SCRUM Poker Development Workflow
+
+### Start the full stack (Flask + PostgreSQL)
+
+```bash
+docker compose -f docker/docker-compose.yml up -d postgres
+uv run flask --app app run --debug
+```
+
+### Apply database migrations
+
+```bash
+uv run alembic upgrade head
+```
+
+### Run the targeted SCRUM Poker test suite
+
+```bash
+# All poker-related tests
+uv run pytest -q tests/unit tests/contract tests/integration
+
+# Single test module
+uv run pytest -q tests/unit/test_vote_service.py
+```
+
+### CI quality gate (mirrors GitHub Actions)
+
+```bash
+uv run black --check .
+uv run pytest -q
+```
+
+### Auto-format before committing
+
+```bash
+uv run black .
+```

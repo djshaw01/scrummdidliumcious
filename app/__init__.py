@@ -4,6 +4,9 @@ import os
 from pathlib import Path
 
 from flask import Flask
+from flask_sock import Sock
+
+sock = Sock()
 
 
 def create_app(config_overrides: dict | None = None) -> Flask:
@@ -25,6 +28,8 @@ def create_app(config_overrides: dict | None = None) -> Flask:
 
     if config_overrides:
         app.config.update(config_overrides)
+
+    sock.init_app(app)
 
     _register_blueprints(app)
 
@@ -67,6 +72,8 @@ def _load_config(app: Flask) -> None:
     app.config["LOGO_ASSET_PATH"] = os.environ.get(
         "LOGO_ASSET_PATH", "images/scrumm_logo.svg"
     )
+    app.config["THEME_DEFAULT"] = os.environ.get("THEME_DEFAULT", "light")
+    app.config["SOCK_SERVER_OPTIONS"] = {"ping_interval": 25}
 
 
 def _register_blueprints(app: Flask) -> None:
