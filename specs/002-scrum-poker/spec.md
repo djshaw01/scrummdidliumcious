@@ -55,7 +55,7 @@ Users can browse the list of previously conducted SCRUM poker sessions, filter b
 
 **Acceptance Scenarios**:
 
-1. **Given** the Entry page is displayed, **When** it loads, **Then** all non-completed sessions are listed in a table ordered by most recent first
+1. **Given** the Entry page is displayed, **When** it loads, **Then** all active and completed sessions are listed in a table ordered by most recent first
 2. **Given** sessions are displayed, **When** the user enters text in the session name filter, **Then** the table updates to show only matching sessions
 3. **Given** sessions are displayed, **When** the user selects a team in the filter dropdown, **Then** the table updates to show only sessions with that team
 4. **Given** sessions are displayed, **When** the user enters a sprint number, **Then** the table updates to show only sessions with that sprint
@@ -125,7 +125,7 @@ Users experience a responsive, professional interface that adapts to screen size
 - **FR-007**: System MUST allow all participants to vote on each issue by selecting voting cards, with votes being removable and changeable until reveal
 - **FR-008**: System MUST display real-time vote count ("All votes N/M") as participants vote
 - **FR-009**: System MUST allow the leader to reveal all votes as anonymized cards horizontally with participant icons below each card
-- **FR-010**: System MUST calculate and display the average of numeric card values only (?, ☕, ♾ each count as 0 for average calculation)
+- **FR-010**: System MUST calculate and display the average using only numeric card values (non-numeric cards ?, ☕, ♾ are excluded from the average)
 - **FR-011**: System MUST allow the leader to select specific revealed cards and set a custom estimate, with the custom value saved to the story
 - **FR-012**: System MUST maintain a persistent list of completed sessions that the admin can view and delete
 - **FR-013**: System MUST store and use a base URL configured in admin settings for generating links to issues in external agile systems (Azure DevOps, Jira, etc.)
