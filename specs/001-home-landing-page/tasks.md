@@ -104,11 +104,12 @@
 **Purpose**: Final validation, performance checks, and docs alignment.
 
 - [ ] T029 [P] Add requirement-traceable performance check for GET / p95 <= 300ms in tests/integration/test_home_page_performance.py
-- [ ] T030 [P] Add documentation for running black and pytest workflows in README.md
+- [ ] T030 [P] Add README command-line run guide in README.md with prerequisites, `uv sync`, optional `docker compose -f docker/docker-compose.yml up -d postgres`, `uv run flask --app app run --debug`, and shutdown/cleanup commands
 - [ ] T031 Validate quickstart steps against implemented files in specs/001-home-landing-page/quickstart.md
 - [ ] T032 Verify OpenAPI contract and route behavior remain aligned in specs/001-home-landing-page/contracts/home-page.openapi.yaml
 - [ ] T033 Enforce docstring completeness with parameter/return docs in app/__init__.py, app/routes/home.py, app/models/landing_page_view.py, and tests/unit/test_home_page.py
 - [ ] T034 Validate SC-004 usability protocol (5 viewers, 10-second recognition check, 4/5 pass threshold) in specs/001-home-landing-page/quickstart.md
+- [ ] T035 Validate README manual CLI execution steps from a fresh shell session in README.md
 
 ---
 
