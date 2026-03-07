@@ -31,6 +31,13 @@ def create_app(config_overrides: dict | None = None) -> Flask:
 
     sock.init_app(app)
 
+    # Initialise the database engine when running outside of unit-test mode.
+    # Tests that need a real DB create their own engine via the db_engine fixture.
+    if app.config.get("APP_ENV") != "testing":
+        from app.db import init_db
+
+        init_db(app.config["DATABASE_URL"])
+
     _register_blueprints(app)
 
     return app
@@ -82,5 +89,16 @@ def _register_blueprints(app: Flask) -> None:
     :param app: Flask application instance.
     """
     from app.routes import home_bp
+    from app.routes.poker_pages import poker_pages_bp
+    from app.routes.poker_api import poker_api_bp
+    from app.routes.admin import admin_bp
 
     app.register_blueprint(home_bp)
+    app.register_blueprint(poker_pages_bp)
+    app.register_blueprint(poker_api_bp)
+    app.register_blueprint(admin_bp)
+
+    # Import the WebSocket route module so that the @sock.route decorator
+    # registers the /ws/poker/session/<session_id> endpoint with the Sock
+    # instance that has already been bound to the app above.
+    import app.realtime.websocket  # noqa: F401

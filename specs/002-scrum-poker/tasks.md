@@ -31,14 +31,14 @@
 
 **CRITICAL**: Complete this phase before user story work
 
-- [ ] T006 Create SQLAlchemy `Team` and `Configuration` models in `app/models/team.py` and `app/models/configuration.py`
-- [ ] T007 Create SQLAlchemy `Session`, `Participant`, `StorageIssue`, and `Vote` models in `app/models/session.py`, `app/models/participant.py`, `app/models/storage_issue.py`, and `app/models/vote.py`
-- [ ] T008 Create initial Alembic migration for SCRUM poker schema in `migrations/versions/002_scrum_poker_initial.py`
-- [ ] T009 [P] Implement shared repositories for session/vote/team/configuration access in `app/repositories/session_repository.py`, `app/repositories/vote_repository.py`, `app/repositories/team_repository.py`, and `app/repositories/configuration_repository.py`
-- [ ] T010 [P] Implement shared Pydantic request DTOs for session/vote/leadership actions in `app/models/dto/create_session_request.py`, `app/models/dto/vote_update_request.py`, and `app/models/dto/leadership_transfer_request.py`
-- [ ] T011 Implement realtime event gateway and websocket endpoint in `app/services/realtime_event_service.py` and `app/realtime/websocket.py`
-- [ ] T012 Wire poker routes and websocket registration into app factory in `app/__init__.py`
-- [ ] T013 [P] Add foundational model/repository tests in `tests/unit/test_scrum_poker_models.py` and `tests/unit/test_scrum_poker_repositories.py`
+- [X] T006 Create SQLAlchemy `Team` and `Configuration` models in `app/models/team.py` and `app/models/configuration.py`
+- [X] T007 Create SQLAlchemy `Session`, `Participant`, `StorageIssue`, and `Vote` models in `app/models/session.py`, `app/models/participant.py`, `app/models/storage_issue.py`, and `app/models/vote.py`
+- [X] T008 Create initial Alembic migration for SCRUM poker schema in `migrations/versions/002_scrum_poker_initial.py`
+- [X] T009 [P] Implement shared repositories for session/vote/team/configuration access in `app/repositories/session_repository.py`, `app/repositories/vote_repository.py`, `app/repositories/team_repository.py`, and `app/repositories/configuration_repository.py`
+- [X] T010 [P] Implement shared Pydantic request DTOs for session/vote/leadership actions in `app/models/dto/create_session_request.py`, `app/models/dto/vote_update_request.py`, and `app/models/dto/leadership_transfer_request.py`
+- [X] T011 Implement realtime event gateway and websocket endpoint in `app/services/realtime_event_service.py` and `app/realtime/websocket.py`
+- [X] T012 Wire poker routes and websocket registration into app factory in `app/__init__.py`
+- [X] T013 [P] Add foundational model/repository tests in `tests/unit/test_scrum_poker_models.py` and `tests/unit/test_scrum_poker_repositories.py`
 
 **Checkpoint**: Foundation ready for independent story implementation
 
