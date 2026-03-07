@@ -36,9 +36,7 @@ class Session(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    team_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("teams.id"), nullable=False
-    )
+    team_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("teams.id"), nullable=False)
     sprint_number: Mapped[int] = mapped_column(Integer, nullable=False)
     status: Mapped[str] = mapped_column(
         Enum("active", "completed", name="session_status_enum"),

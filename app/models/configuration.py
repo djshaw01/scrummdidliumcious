@@ -22,9 +22,7 @@ class Configuration(Base):
     __tablename__ = "configuration"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
-    base_url_for_issues: Mapped[str | None] = mapped_column(
-        String(2048), nullable=True
-    )
+    base_url_for_issues: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     default_theme: Mapped[str | None] = mapped_column(
         Enum("light", "dark", name="theme_enum"),
         nullable=True,

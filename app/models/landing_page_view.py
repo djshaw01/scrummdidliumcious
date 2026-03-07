@@ -48,7 +48,9 @@ class LandingPageView(BaseModel):
         :raises ValueError: If the path does not end with ``.svg``.
         """
         if not value.endswith(".svg"):
-            raise ValueError(f"logo_asset_path must reference an SVG asset, got '{value}'")
+            raise ValueError(
+                f"logo_asset_path must reference an SVG asset, got '{value}'"
+            )
         return value
 
     @field_validator("logo_vertical_size")

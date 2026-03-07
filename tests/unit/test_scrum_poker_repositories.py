@@ -22,7 +22,6 @@ from app.repositories.session_repository import SessionRepository
 from app.repositories.team_repository import TeamRepository
 from app.repositories.vote_repository import VoteRepository
 
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 
@@ -269,9 +268,7 @@ class TestVoteRepository:
         """delete removes a vote from the database."""
         issue, participant = self._setup(db_session)
         repo = VoteRepository(db_session)
-        vote = Vote(
-            issue_id=issue.id, participant_id=participant.id, card_value="13"
-        )
+        vote = Vote(issue_id=issue.id, participant_id=participant.id, card_value="13")
         repo.save(vote)
         repo.delete(vote)
         assert repo.get_by_issue_and_participant(issue.id, participant.id) is None

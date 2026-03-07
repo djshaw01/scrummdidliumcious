@@ -7,7 +7,6 @@ containerized environment.
 import statistics
 import time
 
-
 SAMPLE_COUNT = 20
 P95_THRESHOLD_MS = 300
 

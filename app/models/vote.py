@@ -58,9 +58,7 @@ class Vote(Base):
         default=lambda: datetime.now(timezone.utc),
     )
 
-    issue: Mapped["StorageIssue"] = relationship(
-        "StorageIssue", back_populates="votes"
-    )
+    issue: Mapped["StorageIssue"] = relationship("StorageIssue", back_populates="votes")
     participant: Mapped["Participant"] = relationship(
         "Participant", back_populates="votes"
     )

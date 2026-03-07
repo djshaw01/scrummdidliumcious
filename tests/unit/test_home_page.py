@@ -6,7 +6,6 @@ Requirement traces:
   US3 — Consistent cross-device presentation with responsive/fallback behavior.
 """
 
-
 # ---------------------------------------------------------------------------
 # US1 — Title rendering
 # ---------------------------------------------------------------------------
@@ -92,7 +91,7 @@ def test_home_page_has_nav_placeholder(client):
     :param client: Flask test client fixture.
     """
     response = client.get("/")
-    assert b'data-nav-placeholder' in response.data
+    assert b"data-nav-placeholder" in response.data
 
 
 def test_home_page_nav_placeholder_has_aria_label(client):
@@ -101,7 +100,7 @@ def test_home_page_nav_placeholder_has_aria_label(client):
     :param client: Flask test client fixture.
     """
     response = client.get("/")
-    assert b'aria-label' in response.data
+    assert b"aria-label" in response.data
 
 
 # ---------------------------------------------------------------------------

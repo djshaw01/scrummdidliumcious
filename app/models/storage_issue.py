@@ -55,9 +55,7 @@ class StorageIssue(Base):
     issue_key: Mapped[str] = mapped_column(String(100), nullable=False)
     summary: Mapped[str] = mapped_column(String(512), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    uploaded_story_points: Mapped[str | None] = mapped_column(
-        String(50), nullable=True
-    )
+    uploaded_story_points: Mapped[str | None] = mapped_column(String(50), nullable=True)
     final_estimate: Mapped[str | None] = mapped_column(String(50), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     revealed_at: Mapped[datetime | None] = mapped_column(

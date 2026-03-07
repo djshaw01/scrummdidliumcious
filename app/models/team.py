@@ -33,6 +33,4 @@ class Team(Base):
         default=lambda: datetime.now(timezone.utc),
     )
 
-    sessions: Mapped[list["Session"]] = relationship(
-        "Session", back_populates="team"
-    )
+    sessions: Mapped[list["Session"]] = relationship("Session", back_populates="team")

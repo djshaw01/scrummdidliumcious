@@ -18,7 +18,6 @@ from app.models.storage_issue import StorageIssue
 from app.models.team import Team
 from app.models.vote import VALID_CARD_VALUES, Vote
 
-
 # ── Team ──────────────────────────────────────────────────────────────────────
 
 
@@ -195,9 +194,7 @@ class TestVoteModel:
         )
         db_session.add(issue)
         db_session.flush()
-        participant = Participant(
-            session_id=session.id, user_identifier="user-1"
-        )
+        participant = Participant(session_id=session.id, user_identifier="user-1")
         db_session.add(participant)
         db_session.flush()
         vote = Vote(
