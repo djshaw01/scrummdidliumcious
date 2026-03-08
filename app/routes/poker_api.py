@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import io
 import uuid
 from typing import Any
 
 from flask import Blueprint, Response, jsonify, request
+from werkzeug.datastructures import FileStorage
 
 from app.db import get_db_session
+from app.repositories.team_repository import TeamRepository
 from app.services.realtime_event_service import RealtimeEventService
 from app.services.session_service import SessionService, SessionServiceError
 from app.services.vote_service import VoteError, VoteService
@@ -23,6 +26,184 @@ def _error(message: str, status: int) -> tuple[Response, int]:
     :returns: Tuple of JSON response and status code.
     """
     return jsonify({"error": message}), status
+
+
+# ── Teams listing ──────────────────────────────────────────────────────────────
+
+
+@poker_api_bp.get("/teams")
+def list_teams() -> tuple[Response, int]:
+    """List all teams.
+
+    :returns: JSON with teams array.
+    """
+    db = get_db_session()
+    try:
+        teams = TeamRepository(db).list_all()
+        return (
+            jsonify(
+                {
+                    "teams": [
+                        {
+                            "id": str(t.id),
+                            "name": t.name,
+                            "created_at": t.created_at.isoformat(),
+                        }
+                        for t in teams
+                    ]
+                }
+            ),
+            200,
+        )
+    finally:
+        db.close()
+
+
+# ── Session listing ────────────────────────────────────────────────────────────
+
+
+@poker_api_bp.get("/sessions")
+def list_sessions() -> tuple[Response, int]:
+    """List sessions with optional filters in reverse chronological order.
+
+    Query params:
+    - status: Filter by session status (active or completed).
+    - team_id: Filter by team UUID.
+    - sprint_number: Filter by exact sprint number.
+    - name_query: Filter by partial session name match (case-insensitive).
+
+    :returns: JSON with sessions array.
+    """
+    status = request.args.get("status")
+    team_id_str = request.args.get("team_id")
+    sprint_number_str = request.args.get("sprint_number")
+    name_query = request.args.get("name_query")
+
+    team_id = None
+    if team_id_str:
+        try:
+            team_id = uuid.UUID(team_id_str)
+        except ValueError:
+            return _error("Invalid team_id format.", 400)
+
+    sprint_number = None
+    if sprint_number_str:
+        try:
+            sprint_number = int(sprint_number_str)
+        except ValueError:
+            return _error("Invalid sprint_number format.", 400)
+
+    db = get_db_session()
+    try:
+        sessions = SessionService(db).list_sessions(
+            status=status,
+            team_id=team_id,
+            sprint_number=sprint_number,
+            name_query=name_query,
+        )
+        return jsonify({"sessions": sessions}), 200
+    finally:
+        db.close()
+
+
+# ── Session name prefill ───────────────────────────────────────────────────────
+
+
+@poker_api_bp.get("/teams/<team_id>/last-session-name")
+def get_last_session_name(team_id: str) -> tuple[Response, int]:
+    """Get the most recent session name for a team for prefilling.
+
+    :param team_id: String UUID of the team.
+    :returns: JSON with last_session_name (or null if no sessions exist).
+    """
+    try:
+        tid = uuid.UUID(team_id)
+    except ValueError:
+        return _error("Invalid team_id.", 400)
+
+    db = get_db_session()
+    try:
+        last_name = SessionService(db).get_last_session_name_for_team(tid)
+        return jsonify({"last_session_name": last_name}), 200
+    finally:
+        db.close()
+
+
+# ── Session creation ───────────────────────────────────────────────────────────
+
+
+@poker_api_bp.post("/sessions")
+def create_session() -> tuple[Response, int]:
+    """Create a new session with CSV issue upload.
+
+    Expects multipart/form-data with:
+    - team_id: UUID string
+    - session_name: String
+    - sprint_number: Integer string
+    - card_set: String (e.g., "fibonacci_plus_specials")
+    - issues_file: CSV file
+    - user_identifier: String
+    - display_name: Optional string
+
+    :returns: JSON SessionDetail with 201 Created status.
+    """
+    try:
+        team_id = uuid.UUID(request.form.get("team_id", ""))
+    except ValueError:
+        return _error("Invalid or missing team_id.", 400)
+
+    session_name = request.form.get("session_name")
+    if not session_name:
+        return _error("session_name is required.", 400)
+
+    try:
+        sprint_number = int(request.form.get("sprint_number", ""))
+    except ValueError:
+        return _error("Invalid or missing sprint_number.", 400)
+
+    card_set = request.form.get("card_set")
+    if not card_set:
+        return _error("card_set is required.", 400)
+
+    user_identifier = request.form.get("user_identifier")
+    if not user_identifier:
+        return _error("user_identifier is required.", 400)
+
+    display_name = request.form.get("display_name")
+
+    issues_file: FileStorage | None = request.files.get("issues_file")
+    if not issues_file:
+        return _error("issues_file is required.", 400)
+
+    # Read file content and convert to text stream.
+    try:
+        file_content = issues_file.read().decode("utf-8")
+        csv_stream = io.StringIO(file_content)
+    except Exception as exc:
+        return _error(f"Failed to read CSV file: {exc}", 400)
+
+    db = get_db_session()
+    try:
+        session_detail = SessionService(db).create_session(
+            team_id=team_id,
+            session_name=session_name,
+            sprint_number=sprint_number,
+            card_set=card_set,
+            issues_csv=csv_stream,
+            user_identifier=user_identifier,
+            display_name=display_name,
+        )
+        # Session is already committed by service.
+        RealtimeEventService.get_instance().broadcast(
+            str(session_detail["id"]),
+            {"type": "session_created", "session_id": session_detail["id"]},
+        )
+        return jsonify(session_detail), 201
+    except SessionServiceError as exc:
+        db.rollback()
+        return _error(str(exc), exc.status_code)
+    finally:
+        db.close()
 
 
 # ── Session detail ─────────────────────────────────────────────────────────────
@@ -108,6 +289,62 @@ def rejoin_active_issue(session_id: str, participant_id: str) -> tuple[Response,
             jsonify({"active_issue_id": str(active.id) if active else None}),
             200,
         )
+    except SessionServiceError as exc:
+        db.rollback()
+        return _error(str(exc), exc.status_code)
+    finally:
+        db.close()
+
+
+# ── Leadership transfer ────────────────────────────────────────────────────────
+
+
+@poker_api_bp.post("/sessions/<session_id>/leader")
+def transfer_leadership(session_id: str) -> tuple[Response, int]:
+    """Transfer session leadership to another participant.
+
+    Request body:
+    - current_leader_participant_id: UUID string
+    - new_leader_participant_id: UUID string
+
+    :param session_id: String UUID of the session.
+    :returns: JSON SessionDetail with updated leadership.
+    """
+    body: dict[str, Any] = request.get_json(silent=True) or {}
+
+    try:
+        sid = uuid.UUID(session_id)
+    except ValueError:
+        return _error("Invalid session_id.", 400)
+
+    try:
+        current_leader_id = uuid.UUID(
+            str(body.get("current_leader_participant_id", ""))
+        )
+        new_leader_id = uuid.UUID(str(body.get("new_leader_participant_id", "")))
+    except ValueError:
+        return _error(
+            "Invalid or missing current_leader_participant_id or new_leader_participant_id.",
+            400,
+        )
+
+    db = get_db_session()
+    try:
+        session_detail = SessionService(db).transfer_leadership(
+            session_id=sid,
+            current_leader_participant_id=current_leader_id,
+            new_leader_participant_id=new_leader_id,
+        )
+        # Session is already committed by service.
+        RealtimeEventService.get_instance().broadcast(
+            session_id,
+            {
+                "type": "leadership_transferred",
+                "session_id": session_id,
+                "new_leader_participant_id": str(new_leader_id),
+            },
+        )
+        return jsonify(session_detail), 200
     except SessionServiceError as exc:
         db.rollback()
         return _error(str(exc), exc.status_code)

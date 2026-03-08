@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}SCRUM Poker — Sessions{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/poker.css') }}" />
+<style>
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal.is-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal__content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal__header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .modal__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .modal__body {
+    margin-bottom: 1.5rem;
+  }
+  
+  .modal__footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .btn--primary {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .btn--primary:hover {
+    background-color: #45a049;
+  }
+  
+  .btn--secondary {
+    background-color: #f1f1f1;
+    color: #333;
+  }
+  
+  .btn--secondary:hover {
+    background-color: #e1e1e1;
+  }
+  
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+  }
+  
+  .error-message.is-visible {
+    display: block;
+  }
+  
+  .poker-entry {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .poker-entry__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .poker-entry__title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .sessions-list {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .session-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: box-shadow 0.2s;
+  }
+  
+  .session-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .session-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.5rem;
+  }
+  
+  .session-card__name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .session-card__name:hover {
+    color: #4CAF50;
+  }
+  
+  .session-card__status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .session-card__status--active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .session-card__status--completed {
+    background-color: #f5f5f5;
+    color: #616161;
+  }
+  
+  .session-card__meta {
+    font-size: 0.875rem;
+    color: #666;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="poker-entry">
+  <div class="poker-entry__header">
+    <h1 class="poker-entry__title">SCRUM Poker Sessions</h1>
+    <button class="btn btn--primary js-open-new-session-modal">
+      Create New Session
+    </button>
+  </div>
+  
+  <div class="sessions-list js-sessions-list">
+    <p>Loading sessions...</p>
+  </div>
+</div>
+
+<!-- New Session Modal -->
+<div class="modal js-new-session-modal" id="newSessionModal">
+  <div class="modal__content">
+    <div class="modal__header">
+      <h2 class="modal__title">Create New Session</h2>
+    </div>
+    <form class="modal__body js-new-session-form" id="newSessionForm">
+      <div class="form-group">
+        <label class="form-label" for="teamSelect">Team *</label>
+        <select class="form-select" id="teamSelect" name="team_id" required>
+          <option value="">Select a team...</option>
+        </select>
+        <div class="error-message js-team-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="sessionName">Session Name *</label>
+        <input
+          type="text"
+          class="form-input"
+          id="sessionName"
+          name="session_name"
+          placeholder="Sprint 42"
+          required
+        />
+        <div class="error-message js-session-name-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="sprintNumber">Sprint Number *</label>
+        <input
+          type="number"
+          class="form-input"
+          id="sprintNumber"
+          name="sprint_number"
+          min="1"
+          placeholder="42"
+          required
+        />
+        <div class="error-message js-sprint-number-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="userIdentifier">Your Email/Username *</label>
+        <input
+          type="text"
+          class="form-input"
+          id="userIdentifier"
+          name="user_identifier"
+          placeholder="your.email@example.com"
+          required
+        />
+        <div class="error-message js-user-identifier-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="displayName">Display Name (optional)</label>
+        <input
+          type="text"
+          class="form-input"
+          id="displayName"
+          name="display_name"
+          placeholder="Your Name"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="cardSet">Card Set</label>
+        <select class="form-select" id="cardSet" name="card_set">
+          <option value="fibonacci_plus_specials">Fibonacci + Specials (1,2,3,5,8,13,?,☕,♾)</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="issuesFile">Issues CSV File *</label>
+        <input
+          type="file"
+          class="form-input"
+          id="issuesFile"
+          name="issues_file"
+          accept=".csv"
+          required
+        />
+        <div class="error-message js-issues-file-error"></div>
+        <small style="display: block; margin-top: 0.25rem; color: #666;">
+          Required columns: Issue Type, Issue Key, Summary
+        </small>
+      </div>
+      
+      <div class="error-message js-form-error"></div>
+    </form>
+    <div class="modal__footer">
+      <button type="button" class="btn btn--secondary js-cancel-new-session">
+        Cancel
+      </button>
+      <button type="submit" form="newSessionForm" class="btn btn--primary js-submit-new-session">
+        Create Session
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/poker-session.js') }}"></script>
+{% endblock %}

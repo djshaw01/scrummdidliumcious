@@ -75,6 +75,10 @@
       case "session_completed":
         markSessionCompleted();
         break;
+      case "leadership_transferred":
+        // Reload page to reflect new leadership.
+        window.location.reload();
+        break;
     }
   }
 
@@ -338,5 +342,352 @@
       );
     }
   });
+})();
+
+// ── Entry Page: New Session Modal ──────────────────────────────────────────
+
+(function () {
+  "use strict";
+
+  const modal = document.querySelector(".js-new-session-modal");
+  if (!modal) return;
+
+  const openBtn = document.querySelector(".js-open-new-session-modal");
+  const cancelBtn = document.querySelector(".js-cancel-new-session");
+  const form = document.querySelector(".js-new-session-form");
+  const teamSelect = document.getElementById("teamSelect");
+  const sessionNameInput = document.getElementById("sessionName");
+  const submitBtn = document.querySelector(".js-submit-new-session");
+
+  // Load teams on page load.
+  loadTeams();
+
+  // Open modal.
+  if (openBtn) {
+    openBtn.addEventListener("click", function () {
+      modal.classList.add("is-active");
+    });
+  }
+
+  // Close modal.
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.classList.remove("is-active");
+      form.reset();
+      clearErrors();
+    });
+  }
+
+  // Close modal on background click.
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.remove("is-active");
+      form.reset();
+      clearErrors();
+    }
+  });
+
+  // Load team names for prefill.
+  if (teamSelect) {
+    teamSelect.addEventListener("change", async function () {
+      const teamId = teamSelect.value;
+      if (!teamId) return;
+
+      // Fetch last session name for this team.
+      try {
+        const resp = await fetch("/api/v1/teams/" + teamId + "/last-session-name");
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.last_session_name && sessionNameInput) {
+            sessionNameInput.value = data.last_session_name;
+          }
+        }
+      } catch (_) {
+        // Ignore prefill errors.
+      }
+    });
+  }
+
+  // Submit form.
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      clearErrors();
+
+      const formData = new FormData(form);
+
+      // Validate required fields.
+      if (!formData.get("team_id")) {
+        showError(".js-team-error", "Please select a team.");
+        return;
+      }
+      if (!formData.get("session_name")) {
+        showError(".js-session-name-error", "Please enter a session name.");
+        return;
+      }
+      if (!formData.get("sprint_number")) {
+        showError(".js-sprint-number-error", "Please enter a sprint number.");
+        return;
+      }
+      if (!formData.get("user_identifier")) {
+        showError(".js-user-identifier-error", "Please enter your email or username.");
+        return;
+      }
+      if (!formData.get("issues_file")) {
+        showError(".js-issues-file-error", "Please upload a CSV file.");
+        return;
+      }
+
+      // Set card_set default if not set.
+      if (!formData.get("card_set")) {
+        formData.set("card_set", "fibonacci_plus_specials");
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating...";
+
+      try {
+        const resp = await fetch("/api/v1/sessions", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          // Redirect to the new session page.
+          window.location.href = "/poker/session/" + data.id;
+        } else {
+          const err = await resp.json();
+          showError(".js-form-error", err.error || "Failed to create session.");
+        }
+      } catch (e) {
+        showError(".js-form-error", "Network error. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Session";
+      }
+    });
+  }
+
+  async function loadTeams() {
+    if (!teamSelect) return;
+
+    try {
+      const resp = await fetch("/api/v1/teams");
+      if (resp.ok) {
+        const data = await resp.json();
+        data.teams.forEach(function (team) {
+          const option = document.createElement("option");
+          option.value = team.id;
+          option.textContent = team.name;
+          teamSelect.appendChild(option);
+        });
+      }
+    } catch (_) {
+      // Ignore team loading errors.
+    }
+  }
+
+  function showError(selector, message) {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.textContent = message;
+      el.classList.add("is-visible");
+    }
+  }
+
+  function clearErrors() {
+    document.querySelectorAll(".error-message").forEach(function (el) {
+      el.textContent = "";
+      el.classList.remove("is-visible");
+    });
+  }
+})();
+
+// ── Entry Page: Session Listing ────────────────────────────────────────────
+
+(function () {
+  "use strict";
+
+  const listContainer = document.querySelector(".js-sessions-list");
+  if (!listContainer) return;
+
+  loadSessions();
+
+  async function loadSessions() {
+    try {
+      const resp = await fetch("/api/v1/sessions");
+      if (resp.ok) {
+        const data = await resp.json();
+        renderSessions(data.sessions);
+      } else {
+        listContainer.innerHTML = "<p>Failed to load sessions.</p>";
+      }
+    } catch (_) {
+      listContainer.innerHTML = "<p>Network error. Please refresh the page.</p>";
+    }
+  }
+
+  function renderSessions(sessions) {
+    if (sessions.length === 0) {
+      listContainer.innerHTML = "<p>No sessions found. Create your first session!</p>";
+      return;
+    }
+
+    listContainer.innerHTML = "";
+    sessions.forEach(function (session) {
+      const card = document.createElement("div");
+      card.className = "session-card";
+
+      const header = document.createElement("div");
+      header.className = "session-card__header";
+
+      const link = document.createElement("a");
+      link.className = "session-card__name";
+      link.href = "/poker/session/" + session.id;
+      link.textContent = session.name;
+
+      const status = document.createElement("span");
+      status.className =
+        "session-card__status session-card__status--" + session.status;
+      status.textContent = session.status.charAt(0).toUpperCase() + session.status.slice(1);
+
+      header.appendChild(link);
+      header.appendChild(status);
+
+      const meta = document.createElement("div");
+      meta.className = "session-card__meta";
+      meta.textContent =
+        "Sprint " +
+        session.sprint_number +
+        " • " +
+        session.participant_count +
+        " participant(s)";
+
+      card.appendChild(header);
+      card.appendChild(meta);
+      listContainer.appendChild(card);
+    });
+  }
+})();
+
+// ── Session Page: Leader Transfer Modal ────────────────────────────────────
+
+(function () {
+  "use strict";
+
+  const modal = document.querySelector(".js-transfer-leader-modal");
+  if (!modal) return;
+
+  const openBtn = document.querySelector(".js-open-transfer-leader-modal");
+  const cancelBtn = document.querySelector(".js-cancel-transfer-leader");
+  const submitBtn = document.querySelector(".js-submit-transfer-leader");
+
+  // Open modal.
+  if (openBtn) {
+    openBtn.addEventListener("click", function () {
+      modal.classList.add("is-active");
+    });
+  }
+
+  // Close modal.
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.classList.remove("is-active");
+      clearSelection();
+      clearErrors();
+    });
+  }
+
+  // Close modal on background click.
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.remove("is-active");
+      clearSelection();
+      clearErrors();
+    }
+  });
+
+  // Submit transfer.
+  if (submitBtn) {
+    submitBtn.addEventListener("click", async function () {
+      clearErrors();
+
+      const selectedRadio = modal.querySelector('input[name="new_leader"]:checked');
+      if (!selectedRadio) {
+        showError(".js-transfer-error", "Please select a new leader.");
+        return;
+      }
+
+      const newLeaderId = selectedRadio.value;
+      const sessionId = openBtn ? openBtn.dataset.sessionId : null;
+      if (!sessionId) return;
+
+      // Get current leader ID (first participant with is_leader flag).
+      const currentLeaderId = getCurrentLeaderId();
+      if (!currentLeaderId) {
+        showError(".js-transfer-error", "Could not determine current leader.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "Transferring...";
+
+      try {
+        const resp = await fetch("/api/v1/sessions/" + sessionId + "/leader", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            current_leader_participant_id: currentLeaderId,
+            new_leader_participant_id: newLeaderId,
+          }),
+        });
+
+        if (resp.ok) {
+          // Reload page to reflect new leadership.
+          window.location.reload();
+        } else {
+          const err = await resp.json();
+          showError(".js-transfer-error", err.error || "Failed to transfer leadership.");
+        }
+      } catch (e) {
+        showError(".js-transfer-error", "Network error. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
+
+  function getCurrentLeaderId() {
+    const leaderIcon = document.querySelector(
+      '.participant-icon[data-is-leader="true"]'
+    );
+    if (!leaderIcon) return null;
+    return leaderIcon.dataset.participantId || null;
+  }
+
+  function clearSelection() {
+    const radios = modal.querySelectorAll('input[name="new_leader"]');
+    radios.forEach(function (r) {
+      r.checked = false;
+    });
+  }
+
+  function showError(selector, message) {
+    const el = modal.querySelector(selector);
+    if (el) {
+      el.textContent = message;
+      el.classList.add("is-visible");
+    }
+  }
+
+  function clearErrors() {
+    modal.querySelectorAll(".error-message").forEach(function (el) {
+      el.textContent = "";
+      el.classList.remove("is-visible");
+    });
+  }
 })();
 

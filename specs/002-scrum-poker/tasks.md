@@ -79,19 +79,19 @@
 
 ### Tests for User Story 2
 
-- [ ] T025 [P] [US2] Add contract tests for session creation and leadership transfer in `tests/contract/test_scrum_poker_session_contract.py`
-- [ ] T026 [P] [US2] Add integration tests for session creation flow and leader transfer UI state in `tests/integration/test_scrum_poker_session_lifecycle.py`
-- [ ] T027 [P] [US2] Add unit tests for CSV parsing and validation errors in `tests/unit/test_csv_issue_import_service.py`
+- [X] T025 [P] [US2] Add contract tests for session creation and leadership transfer in `tests/contract/test_scrum_poker_session_contract.py`
+- [X] T026 [P] [US2] Add integration tests for session creation flow and leader transfer UI state in `tests/integration/test_scrum_poker_session_lifecycle.py`
+- [X] T027 [P] [US2] Add unit tests for CSV parsing and validation errors in `tests/unit/test_csv_issue_import_service.py`
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Implement CSV import parser with required-column validation and extra-column tolerance in `app/services/csv_issue_import_service.py`
-- [ ] T029 [US2] Implement session creation service (team/session/sprint/card set + issue ingestion) in `app/services/session_service.py`
-- [ ] T030 [US2] Implement create-session and transfer-leader API endpoints in `app/routes/poker_api.py`
-- [ ] T031 [US2] Implement entry-page new-session modal and submission flow in `app/templates/poker_entry.html` and `app/static/scripts/poker-session.js`
-- [ ] T032 [US2] Implement leader transfer modal and participant selector in `app/templates/poker_session.html` and `app/static/scripts/poker-session.js`
-- [ ] T033 [US2] Persist and prefill last session name per team during session creation in `app/repositories/session_repository.py` and `app/services/session_service.py`
-- [ ] T034 [US2] Add creator auto-join and initial leader assignment transaction logic in `app/services/session_service.py`
+- [X] T028 [US2] Implement CSV import parser with required-column validation and extra-column tolerance in `app/services/csv_issue_import_service.py`
+- [X] T029 [US2] Implement session creation service (team/session/sprint/card set + issue ingestion) in `app/services/session_service.py`
+- [X] T030 [US2] Implement create-session and transfer-leader API endpoints in `app/routes/poker_api.py`
+- [X] T031 [US2] Implement entry-page new-session modal and submission flow in `app/templates/poker_entry.html` and `app/static/scripts/poker-session.js`
+- [X] T032 [US2] Implement leader transfer modal and participant selector in `app/templates/poker_session.html` and `app/static/scripts/poker-session.js`
+- [X] T033 [US2] Persist and prefill last session name per team during session creation in `app/repositories/session_repository.py` and `app/services/session_service.py`
+- [X] T034 [US2] Add creator auto-join and initial leader assignment transaction logic in `app/services/session_service.py`
 
 **Checkpoint**: User Story 2 is independently testable and demoable
 

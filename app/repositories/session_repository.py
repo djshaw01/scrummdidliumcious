@@ -58,6 +58,22 @@ class SessionRepository:
         )
         return self._db.scalars(stmt).all()
 
+    def get_most_recent_by_team(self, team_id: uuid.UUID) -> PokerSession | None:
+        """Fetch the most recent session for a team.
+
+        Used to prefill session name during new session creation.
+
+        :param team_id: UUID of the team.
+        :returns: Most recent PokerSession or None if no sessions exist.
+        """
+        stmt = (
+            select(PokerSession)
+            .where(PokerSession.team_id == team_id)
+            .order_by(PokerSession.created_at.desc())
+            .limit(1)
+        )
+        return self._db.scalars(stmt).first()
+
     def save(self, session: PokerSession) -> PokerSession:
         """Persist a new or updated session.
 
