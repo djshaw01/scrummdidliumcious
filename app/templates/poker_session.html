@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poker_session.name }} — Sprint {{ poker_session.sprint_number }}{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/poker.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div
+  class="poker-layout"
+  data-session-id="{{ poker_session.id }}"
+  data-session-status="{{ poker_session.status }}"
+>
+  <!-- Status row -->
+  <header class="poker-status-row" role="banner" aria-label="Session status">
+    <div class="poker-status-row__title">
+      <span class="poker-status-row__name">{{ poker_session.name }}</span>
+      <span class="poker-status-row__meta">
+        {{ poker_session.team_name }} · Sprint {{ poker_session.sprint_number }}
+      </span>
+    </div>
+
+    <div class="poker-status-row__participants" aria-label="Participants">
+      {% for p in participants %}
+      <span
+        class="participant-icon{% if p.is_leader %} participant-icon--leader{% endif %}"
+        title="{{ p.display_name or p.user_identifier }}{% if p.is_leader %} (leader){% endif %}"
+        aria-label="{{ p.display_name or p.user_identifier }}{% if p.is_leader %}, leader{% endif %}"
+      >
+        {{ (p.display_name or p.user_identifier)[:1] | upper }}
+        {% if p.is_leader %}<span class="participant-icon__crown" aria-hidden="true">👑</span>{% endif %}
+      </span>
+      {% endfor %}
+    </div>
+
+    <div class="poker-status-row__actions">
+      {% if poker_session.status == "active" %}
+      <button
+        class="btn btn--danger js-complete-session"
+        data-session-id="{{ poker_session.id }}"
+        aria-label="Complete session and lock voting"
+      >
+        Complete Session
+      </button>
+      {% else %}
+      <span class="poker-status-row__badge poker-status-row__badge--completed">
+        Completed
+      </span>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Two-column body -->
+  <div class="poker-body">
+
+    <!-- Left: Issue navigation (25%) -->
+    <nav class="poker-nav" aria-label="Issue navigation">
+      <ul class="poker-nav__list" role="list">
+        {% for issue in issues %}
+        <li
+          class="poker-nav__item{% if issue.id == active_issue_id %} poker-nav__item--active{% endif %}"
+          data-issue-id="{{ issue.id }}"
+        >
+          <button
+            class="poker-nav__card js-activate-issue"
+            data-session-id="{{ poker_session.id }}"
+            data-issue-id="{{ issue.id }}"
+            aria-current="{% if issue.id == active_issue_id %}true{% else %}false{% endif %}"
+          >
+            <span class="poker-nav__type-emoji" aria-hidden="true">
+              {% if issue.issue_type == "Story" %}📖{% elif issue.issue_type == "Bug" %}🐛{% else %}🔖{% endif %}
+            </span>
+            <span class="poker-nav__key">{{ issue.issue_key }}</span>
+            <span class="poker-nav__summary">{{ issue.summary[:60] }}{% if issue.summary | length > 60 %}…{% endif %}</span>
+            {% if issue.final_estimate %}
+            <span class="poker-nav__estimate" aria-label="Estimate: {{ issue.final_estimate }}">
+              {{ issue.final_estimate }}
+            </span>
+            {% endif %}
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <!-- Right: Active issue detail (75%) -->
+    <main class="poker-detail" aria-label="Active issue detail">
+      {% if active_issue_id %}
+        {% for issue in issues %}
+        {% if issue.id == active_issue_id %}
+        <section
+          class="poker-issue"
+          id="issue-{{ issue.id }}"
+          data-issue-id="{{ issue.id }}"
+          data-revealed="{{ 'true' if issue.revealed_at else 'false' }}"
+        >
+          <!-- Issue header -->
+          <div class="poker-issue__header">
+            <span class="poker-issue__type-emoji" aria-hidden="true">
+              {% if issue.issue_type == "Story" %}📖{% elif issue.issue_type == "Bug" %}🐛{% else %}🔖{% endif %}
+            </span>
+            <h1 class="poker-issue__key">{{ issue.issue_key }}</h1>
+            <span class="poker-issue__type-label">{{ issue.issue_type }}</span>
+          </div>
+
+          <h2 class="poker-issue__summary">{{ issue.summary }}</h2>
+
+          {% if issue.description %}
+          <p class="poker-issue__description">
+            {{ issue.description[:200] }}{% if issue.description | length > 200 %}…{% endif %}
+          </p>
+          {% endif %}
+
+          <!-- Vote count strip -->
+          <div class="poker-vote-strip" aria-live="polite" aria-label="Vote status">
+            <span class="poker-vote-strip__label">Votes:</span>
+            <span
+              class="poker-vote-strip__count js-vote-count"
+              data-issue-id="{{ issue.id }}"
+            >0</span>
+            <span class="poker-vote-strip__separator">/</span>
+            <span class="poker-vote-strip__total">{{ participants | length }}</span>
+
+            {% if issue.revealed_at %}
+            <span class="poker-vote-strip__revealed-badge">Revealed</span>
+            {% endif %}
+          </div>
+
+          <!-- Voting cards (hidden after reveal) -->
+          {% if poker_session.status == "active" and not issue.revealed_at %}
+          <div
+            class="poker-cards js-vote-cards"
+            role="group"
+            aria-label="Vote cards"
+            data-session-id="{{ poker_session.id }}"
+            data-issue-id="{{ issue.id }}"
+          >
+            {% for card in ["1", "2", "3", "5", "8", "13", "?", "☕", "♾"] %}
+            <button
+              class="poker-card js-cast-vote"
+              data-card-value="{{ card }}"
+              aria-label="Vote {{ card }}"
+            >
+              {{ card }}
+            </button>
+            {% endfor %}
+          </div>
+
+          <p class="poker-cards__hint">Select a card to cast your vote.</p>
+          {% endif %}
+
+          <!-- Revealed votes summary -->
+          {% if issue.revealed_at %}
+          <div class="poker-reveal-summary js-reveal-summary" aria-label="Revealed votes">
+            <h3 class="poker-reveal-summary__heading">Votes Revealed</h3>
+            <div class="poker-reveal-summary__votes js-revealed-votes"></div>
+            <p class="poker-reveal-summary__average" aria-live="polite">
+              Average: <strong class="js-vote-average">—</strong>
+            </p>
+          </div>
+          {% endif %}
+
+          <!-- Estimate controls (visible after reveal for leader) -->
+          {% if issue.revealed_at %}
+          <div class="poker-estimate" aria-label="Estimate controls">
+            {% if issue.final_estimate %}
+            <p class="poker-estimate__saved">
+              Saved estimate: <strong>{{ issue.final_estimate }}</strong>
+            </p>
+            {% endif %}
+            <div class="poker-estimate__form js-estimate-form"
+                 data-session-id="{{ poker_session.id }}"
+                 data-issue-id="{{ issue.id }}">
+              <label for="custom-estimate-{{ issue.id }}" class="poker-estimate__label">
+                Custom estimate:
+              </label>
+              <input
+                id="custom-estimate-{{ issue.id }}"
+                class="poker-estimate__input js-custom-estimate"
+                type="text"
+                placeholder="e.g. 5 or XL"
+                aria-label="Custom estimate value"
+              />
+              <button
+                class="btn btn--primary js-save-estimate"
+                data-session-id="{{ poker_session.id }}"
+                data-issue-id="{{ issue.id }}"
+                aria-label="Save custom estimate"
+              >
+                Save Estimate
+              </button>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Leader action buttons (Reveal, Rejoin) -->
+          {% if poker_session.status == "active" and not issue.revealed_at %}
+          <div class="poker-leader-actions" aria-label="Leader actions">
+            <button
+              class="btn btn--secondary js-reveal-votes"
+              data-session-id="{{ poker_session.id }}"
+              data-issue-id="{{ issue.id }}"
+              aria-label="Reveal votes for this issue"
+            >
+              Reveal Votes
+            </button>
+            <button
+              class="btn btn--ghost js-rejoin"
+              data-session-id="{{ poker_session.id }}"
+              data-participant-id=""
+              aria-label="Rejoin active voting issue"
+              style="display:none"
+            >
+              Rejoin
+            </button>
+          </div>
+          {% endif %}
+        </section>
+        {% endif %}
+        {% endfor %}
+      {% else %}
+      <div class="poker-detail__empty">
+        <p>No issue is currently active. Select an issue from the navigation panel.</p>
+      </div>
+      {% endif %}
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script
+  src="{{ url_for('static', filename='scripts/poker-session.js') }}"
+  defer
+></script>
+{% endblock %}

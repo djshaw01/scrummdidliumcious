@@ -52,20 +52,20 @@
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Add contract tests for vote/reveal/estimate/complete-session endpoints in `tests/contract/test_scrum_poker_voting_contract.py`
-- [ ] T015 [P] [US1] Add realtime integration test for vote count/reveal broadcast and post-completion vote lock in `tests/integration/test_scrum_poker_realtime.py`
-- [ ] T016 [P] [US1] Add vote domain unit tests for upsert/remove/reveal lock behavior in `tests/unit/test_vote_service.py`
+- [X] T014 [P] [US1] Add contract tests for vote/reveal/estimate/complete-session endpoints in `tests/contract/test_scrum_poker_voting_contract.py`
+- [X] T015 [P] [US1] Add realtime integration test for vote count/reveal broadcast and post-completion vote lock in `tests/integration/test_scrum_poker_realtime.py`
+- [X] T016 [P] [US1] Add vote domain unit tests for upsert/remove/reveal lock behavior in `tests/unit/test_vote_service.py`
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement vote cast/change/remove service logic with reveal and completed-session guards in `app/services/vote_service.py`
-- [ ] T018 [US1] Implement reveal idempotency and numeric-average calculation rules in `app/services/vote_service.py`
-- [ ] T019 [US1] Implement estimate save logic for selected cards and custom values in `app/services/vote_service.py`
-- [ ] T020 [US1] Implement voting/reveal/estimate/complete-session API routes in `app/routes/poker_api.py`
-- [ ] T021 [US1] Implement issue activation and rejoin workflow handling in `app/services/session_service.py` and `app/routes/poker_api.py`
-- [ ] T022 [US1] Implement session detail page rendering for cards/vote strip/status row in `app/routes/poker_pages.py` and `app/templates/poker_session.html`
-- [ ] T023 [P] [US1] Implement realtime client updates for vote count/reveal state in `app/static/scripts/poker-session.js`
-- [ ] T024 [US1] Broadcast vote/reveal/activation/complete events after committed transactions in `app/services/realtime_event_service.py`
+- [X] T017 [US1] Implement vote cast/change/remove service logic with reveal and completed-session guards in `app/services/vote_service.py`
+- [X] T018 [US1] Implement reveal idempotency and numeric-average calculation rules in `app/services/vote_service.py`
+- [X] T019 [US1] Implement estimate save logic for selected cards and custom values in `app/services/vote_service.py`
+- [X] T020 [US1] Implement voting/reveal/estimate/complete-session API routes in `app/routes/poker_api.py`
+- [X] T021 [US1] Implement issue activation and rejoin workflow handling in `app/services/session_service.py` and `app/routes/poker_api.py`
+- [X] T022 [US1] Implement session detail page rendering for cards/vote strip/status row in `app/routes/poker_pages.py` and `app/templates/poker_session.html`
+- [X] T023 [P] [US1] Implement realtime client updates for vote count/reveal state in `app/static/scripts/poker-session.js`
+- [X] T024 [US1] Broadcast vote/reveal/activation/complete events after committed transactions in `app/services/realtime_event_service.py`
 
 **Checkpoint**: User Story 1 is independently testable and demoable
 
