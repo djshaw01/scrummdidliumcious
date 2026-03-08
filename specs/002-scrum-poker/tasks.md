@@ -105,16 +105,16 @@
 
 ### Tests for User Story 5
 
-- [ ] T035 [P] [US5] Add responsive and theme persistence integration tests in `tests/integration/test_scrum_poker_responsive_theme.py`
-- [ ] T036 [P] [US5] Add unit tests for theme persistence service in `tests/unit/test_theme_service.py`
+- [X] T035 [P] [US5] Add responsive and theme persistence integration tests in `tests/integration/test_scrum_poker_responsive_theme.py`
+- [X] T036 [P] [US5] Add unit tests for theme persistence service in `tests/unit/test_theme_service.py`
 
 ### Implementation for User Story 5
 
-- [ ] T037 [US5] Implement theme preference read/write service in `app/services/theme_service.py`
-- [ ] T038 [US5] Add global theme toggle controls in home navigation and base layout in `app/templates/base.html` and `app/templates/home.html`
-- [ ] T039 [US5] Apply CSS variable-based light/dark token system in `app/static/styles/theme.css`
-- [ ] T040 [US5] Implement responsive layouts for entry and session pages in `app/static/styles/poker.css` and `app/templates/poker_entry.html`
-- [ ] T041 [US5] Persist theme selection in browser and sync on page load in `app/static/scripts/theme-toggle.js`
+- [X] T037 [US5] Implement theme preference read/write service in `app/services/theme_service.py`
+- [X] T038 [US5] Add global theme toggle controls in home navigation and base layout in `app/templates/base.html` and `app/templates/home.html`
+- [X] T039 [US5] Apply CSS variable-based light/dark token system in `app/static/styles/theme.css`
+- [X] T040 [US5] Implement responsive layouts for entry and session pages in `app/static/styles/poker.css` and `app/templates/poker_entry.html`
+- [X] T041 [US5] Persist theme selection in browser and sync on page load in `app/static/scripts/theme-toggle.js`
 
 **Checkpoint**: User Story 5 is independently testable and demoable
 

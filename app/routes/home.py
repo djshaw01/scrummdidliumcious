@@ -5,7 +5,9 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, render_template
 
+from app.db import get_db_session
 from app.models.landing_page_view import LandingPageView
+from app.services.theme_service import ThemeService
 
 home_bp = Blueprint("home", __name__)
 
@@ -27,7 +29,14 @@ def index():
         logo_fallback_text="SCRUMMDidliumcious logo",
     )
 
-    return render_template("home.html", view=view, logo_available=logo_available)
+    # Get current theme preference
+    db = get_db_session()
+    theme_service = ThemeService(db)
+    theme = theme_service.get_theme()
+
+    return render_template(
+        "home.html", view=view, logo_available=logo_available, theme=theme
+    )
 
 
 def _resolve_logo_availability(logo_asset_path: str) -> bool:

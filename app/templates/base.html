@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ theme|default('light') }}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}SCRUMMDidliumcious{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/theme.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}" />
     {% block head_extra %}{% endblock %}
 </head>
@@ -12,6 +13,7 @@
     {% block nav %}{% endblock %}
     {% block content %}{% endblock %}
     {% block footer %}{% endblock %}
+    <script src="{{ url_for('static', filename='scripts/theme-toggle.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

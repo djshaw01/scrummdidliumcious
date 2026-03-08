@@ -8,17 +8,23 @@ from flask import Blueprint, abort, render_template
 
 from app.db import get_db_session
 from app.services.session_service import SessionService, SessionServiceError
+from app.services.theme_service import ThemeService
 
 poker_pages_bp = Blueprint("poker_pages", __name__)
 
 
-@poker_pages_bp.get("/poker")
+@poker_pages_bp.get("/poker/start")
 def poker_entry() -> str:
     """Render the poker entry/lobby page with session listing and new session modal.
 
     :returns: Rendered HTML for the poker entry page.
     """
-    return render_template("poker_entry.html")
+    db = get_db_session()
+    theme_service = ThemeService(db)
+    theme = theme_service.get_theme()
+    db.close()
+
+    return render_template("poker_entry.html", theme=theme)
 
 
 @poker_pages_bp.get("/poker/session/<session_id>")
@@ -35,6 +41,8 @@ def session_detail(session_id: str) -> str:
     db = get_db_session()
     try:
         detail = SessionService(db).get_session_detail(sid)
+        theme_service = ThemeService(db)
+        theme = theme_service.get_theme()
     except SessionServiceError:
         abort(404)
     finally:
@@ -57,4 +65,5 @@ def session_detail(session_id: str) -> str:
         participants=detail["participants"],
         issues=detail["issues"],
         active_issue_id=detail["active_issue"],
+        theme=theme,
     )

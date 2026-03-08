@@ -119,6 +119,7 @@ class CSVIssueImportService:
         :returns: List of issue dictionaries with normalized field names.
         :raises CSVValidationError: If validation fails.
         """
+        
         reader = csv.reader(csv_file)
 
         # Read and normalize headers.

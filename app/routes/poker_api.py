@@ -177,7 +177,7 @@ def create_session() -> tuple[Response, int]:
 
     # Read file content and convert to text stream.
     try:
-        file_content = issues_file.read().decode("utf-8")
+        file_content = issues_file.read().decode("utf-8-sig")
         csv_stream = io.StringIO(file_content)
     except Exception as exc:
         return _error(f"Failed to read CSV file: {exc}", 400)
